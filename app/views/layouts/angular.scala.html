@@ -1,0 +1,59 @@
+@(title: String)(head: Html)(body: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+
+        @head
+    </head>
+    <body>
+        @*-- Header -- *@
+        <header class="navbar navbar-inverse navbar-fixed-top basics-nav" data-ng-controller="HeaderCtrl"
+                data-ng-cloak>
+            <div class="container" data-ng-switch="!!user" data-ng-cloak>
+                <a href="#/" class="navbar-brand">Play-Angular Seed</a>
+                <div data-ng-switch-when="true">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-user"></span> {{user.firstName}} {{user.lastName}}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                                <li>
+                                    <a href="" data-ng-click="logout()">
+                                        <span class="glyphicon glyphicon-off"></span> Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div data-ng-switch-when="false">
+                    <ul class="nav navbar-nav pull-right">
+                        <li><a href="#/login">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        @* -- Main Content -- *@
+        <div class="container" data-ng-cloak>
+            <div data-ng-view></div>
+        </div>
+        @*-- Footer -- *@
+        <footer data-ng-controller="FooterCtrl">
+        </footer>
+
+
+    </body>
+</html>

@@ -1,0 +1,44 @@
+@(title: String)(head: Html)(body: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+
+        @head
+    </head>
+    <body>
+        @*-- Header -- *@
+        <header class="navbar navbar-inverse navbar-fixed-top basics-nav">
+            <div class="container">
+                <a href="#/" class="navbar-brand">Karaoke</a>
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                    </ul>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav pull-right">
+                        <li><a href="#/login">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        @* -- Main Content -- *@
+        <div class="container">
+          @body
+        </div>
+        @*-- Footer -- *@
+        <footer>
+        </footer>
+
+
+    </body>
+</html>
