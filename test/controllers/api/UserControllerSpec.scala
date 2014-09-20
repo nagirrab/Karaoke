@@ -9,12 +9,12 @@ import play.api.db.slick.{Session => DBSession}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.{UserRepositoryComponent}
+import repositories.UserRepositoryComponent
 
 /**
  * Created by hugh on 9/2/14.
  */
-class UserControllerSpec extends DBSpecBase {
+class UserControllerSpec extends SpecBase {
   class TestController() extends UserController with UserRepositoryComponent {
     override val userRepository = mock[UserRepository]
   }

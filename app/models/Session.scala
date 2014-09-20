@@ -7,13 +7,14 @@ import play.api.libs.json.Json
 case class SessionId(id: Long) extends AnyVal with BaseId
 object SessionId extends IdCompanion[SessionId]
 
-case class Session(id: Option[SessionId] = None, name: String, password: Option[String] = None,
+case class Session(id: Option[SessionId] = None, name: String, userId: UserId, password: Option[String] = None,
                    autoApprove: Boolean = true, autoOrder: Boolean = true, notes: String = "") extends WithId[SessionId]
 
 class Sessions(tag: Tag)
   extends IdTable[SessionId, Session](tag, "sessions") {
 
   def name = column[String]("name")
+  def userId = column[UserId]("user_id")
   //def startDate = column[DateTime]("start_date")
   //def endDate = column[DateTime]("end_date")
   def password = column[Option[String]]("password", O.Nullable)
@@ -23,10 +24,11 @@ class Sessions(tag: Tag)
 
 
   //def * = (id, name, startDate, endDate, password, autoApprove, autoOrder, notes) <> (Session.tupled, Session.unapply)
-  def * = (id.?, name, password, autoApprove, autoOrder, notes) <> (Session.tupled, Session.unapply)
+  def * = (id.?, name, userId, password, autoApprove, autoOrder, notes) <> (Session.tupled, Session.unapply)
 }
 
 object SessionFormatter {
+  import UserFormatter._
   implicit val sessionIdReads = Json.reads[SessionId]
   implicit val sessionReads = Json.reads[Session]
   implicit val sessionIdWrites = Json.writes[SessionId]

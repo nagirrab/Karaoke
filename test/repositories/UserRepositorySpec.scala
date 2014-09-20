@@ -24,8 +24,8 @@ class UserRepositorySpec extends DBSpecBase {
   "UserRepository#findByEmailQuery" when {
 
     "the email exists" should {
-      "return the user" in new UserSpecHelpers {
-        withRollback { implicit s =>
+      "return the user" in { implicit s =>
+        new UserSpecHelpers {
           val email = randomString()
           val existingUser = createUser(email = email)
           val test = userRepository.findById(models.UserId(1))
@@ -35,8 +35,8 @@ class UserRepositorySpec extends DBSpecBase {
     }
 
     "the email does not exist" should {
-      "return none" in new UserSpecHelpers {
-        withRollback { implicit s =>
+      "return none" in { implicit s =>
+        new UserSpecHelpers {
           userRepository.findByEmailQuery(randomString()).run.headOption shouldEqual None
         }
       }
@@ -51,8 +51,8 @@ class UserRepositorySpec extends DBSpecBase {
         val attempt = UserCreationAttempt(name, randomString(), password)
       }
 
-      "create the user" in new NewUser {
-        withRollback { implicit s =>
+      "create the user" in { implicit s =>
+        new NewUser {
           val result = userRepository.create(attempt)
           val createdUser = result.right.get
           createdUser.email shouldBe attempt.email
@@ -67,13 +67,13 @@ class UserRepositorySpec extends DBSpecBase {
         val usedEmail = randomString()
         val attempt = UserCreationAttempt("Bob", usedEmail, "password")
       }
-      "return an error" in new ExistingUser {
-        withRollback { implicit s =>
+
+      "return an error" in { implicit s =>
+        new ExistingUser {
           createUser(email = usedEmail)
-          userRepository.create(attempt) shouldBe Left(UserCreationFailed("email taken"))
+            userRepository.create(attempt) shouldBe Left(UserCreationFailed("email taken"))
         }
       }
     }
   }
-
 }

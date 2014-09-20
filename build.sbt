@@ -22,7 +22,8 @@ libraryDependencies ++= Seq(
   "com.github.tototoshi" %% "slick-joda-mapper" % "1.2.0",
   "com.chuusai" %% "shapeless" % "2.0.0",
   "org.virtuslab" %% "unicorn-play" % "0.6.0-M8",
-  "org.mindrot" % "jbcrypt" % "0.3m"
+  "org.mindrot" % "jbcrypt" % "0.3m",
+  "org.scalaz" %% "scalaz-core" % "7.1.0"
 )
 
 libraryDependencies ++= Seq(

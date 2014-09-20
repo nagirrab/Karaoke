@@ -19,9 +19,10 @@ class SessionRepositorySpec extends DBSpecBase {
   "SessionRepository#withSongs" when {
 
     "there are songs" should {
-      "return the songs" in new SessionSpecHelpers {
-        withRollback { implicit s =>
-          val sessionId = sessionRepository.save(Session(name = "TestSession"))
+
+      "return the songs" in { implicit s =>
+        new SessionSpecHelpers {
+          val sessionId = sessionRepository.save(Session(name = "TestSession", userId = UserId(1)))
           val session = sessionRepository.findById(sessionId).get
 
           val songId = sessionSongRepository.save(SessionSong(sessionId = sessionId, title = "Title", artist = "Artist"))

@@ -1,7 +1,7 @@
 package controllers.api
 
 import fixtures.SpecBase
-import models.{SessionId, Session}
+import models.{UserId, SessionId, Session}
 import org.mockito.Matchers
 import play.api.db.slick.{Session => DBSession}
 import play.api.libs.json.{JsValue, Json}
@@ -44,7 +44,7 @@ class SessionControllerSpec extends SpecBase {
 
     "there are sessions" should {
       trait WithSessions extends WithController {
-        val sessions = List(Session(Some(SessionId(1)), "name", Some("password")), Session(Some(SessionId(2)), "another name", Some("another password")))
+        val sessions = List(Session(Some(SessionId(1)), "name", UserId(1), Some("password")), Session(Some(SessionId(2)), "another name", UserId(1), Some("another password")))
         when(controller.sessionRepository.findAll()(Matchers.any[DBSession])).thenReturn(sessions)
       }
 
@@ -67,8 +67,8 @@ class SessionControllerSpec extends SpecBase {
     "given valid json" should {
 
       trait ValidJson extends WithController {
-        val unsavedModel = models.Session(None, "test")
-        val savedModel = models.Session(Some(SessionId(1)), "test")
+        val unsavedModel = models.Session(None, "test", UserId(1))
+        val savedModel = models.Session(Some(SessionId(1)), "test", UserId(1))
         val data = Json.toJson(unsavedModel)
 
         when(controller.sessionRepository.save(Matchers.eq(unsavedModel))(Matchers.any[DBSession])).thenReturn(savedModel.id.value)
@@ -102,7 +102,7 @@ class SessionControllerSpec extends SpecBase {
     "given a valid id" should {
       trait ValidId extends WithController {
         val id = SessionId(1)
-        val savedModel = models.Session(Some(id), "test")
+        val savedModel = models.Session(Some(id), "test", UserId(1))
 
         when(controller.sessionRepository.findById(Matchers.eq(id))(Matchers.any[DBSession])).thenReturn(Some(savedModel))
       }
@@ -138,8 +138,8 @@ class SessionControllerSpec extends SpecBase {
       "given valid json" should {
 
         trait ValidJson extends WithController {
-          val previous = models.Session(Some(SessionId(1)), "test")
-          val updated = models.Session(Some(SessionId(1)), "updated")
+          val previous = models.Session(Some(SessionId(1)), "test", UserId(1))
+          val updated = models.Session(Some(SessionId(1)), "updated", UserId(1))
           val previousData = Json.toJson(previous)
           val updatedData = Json.toJson(updated)
 
@@ -161,7 +161,7 @@ class SessionControllerSpec extends SpecBase {
         trait InvalidJson extends WithController {
           val invalidData = Json.toJson(Map("invalid" -> "here"))
 
-          val previous = models.Session(Some(SessionId(1)), "test")
+          val previous = models.Session(Some(SessionId(1)), "test", UserId(1))
 
           when(controller.sessionRepository.findById(Matchers.eq(previous.id.value))(Matchers.any[DBSession])).thenReturn(Some(previous))
         }
