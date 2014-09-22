@@ -14,7 +14,8 @@ class SingerRepositorySpec extends DBSpecBase {
 
   "SingerRepository#joinSession" when {
     "given a valid session id" when {
-      class ExistingSession(implicit val dbSession: DBSession) extends SingerSpecHelpers {
+      trait ExistingSession extends SingerSpecHelpers {
+        implicit def dbSession: DBSession
         def password: Option[String] = None
         val sessionId = sessionRepository.save(Session(name = "test session", userId = UserId(1), password = password))
         val session = sessionRepository.findById(sessionId).get
@@ -23,7 +24,8 @@ class SingerRepositorySpec extends DBSpecBase {
       "there is no password" when {
         "the name is not taken" should {
           "create the singer successfully" in { s =>
-            new ExistingSession()(s) { // The setup steps require a session, which we pass in like this to make the implicits work
+            new ExistingSession { // The setup steps require a session, which we pass in like this to make the implicits work
+              implicit def dbSession = s
               singerRepository.joinSession(JoinSessionRequest(sessionId, "Bob")) match {
                 case Success(singer) =>
                   singer.id shouldNot be(None)
@@ -35,12 +37,14 @@ class SingerRepositorySpec extends DBSpecBase {
         }
 
         "the name is taken" should {
-          class ExistingSinger(override implicit val dbSession: DBSession) extends ExistingSession()(dbSession) {
+          trait ExistingSinger extends ExistingSession {
             val existingSingerId = singerRepository.save(Singer(sessionId = sessionId, name = "Bob"))
           }
 
           "give an error" in { s =>
-            new ExistingSinger()(s) {
+            new ExistingSinger {
+              override implicit def dbSession = s
+
               singerRepository.joinSession(JoinSessionRequest(sessionId, "Bob")) shouldBe Failure(NameAlreadyTaken("Bob"))
             }
           }
@@ -48,14 +52,14 @@ class SingerRepositorySpec extends DBSpecBase {
       }
 
       "there is a password" when {
-        class WithPassword(override implicit val dbSession: DBSession) extends ExistingSession()(dbSession) {
+        trait WithPassword extends ExistingSession {
           override def password = Some("password")
-
         }
 
         "the password is invalid" should {
           "return bad password error" in { s =>
-            new WithPassword()(s) {
+            new WithPassword {
+              override implicit def dbSession = s
               singerRepository.joinSession(JoinSessionRequest(sessionId, "Bob", password = Some("blah"))) shouldBe Failure(InvalidPassword(sessionId))
             }
           }
@@ -63,7 +67,9 @@ class SingerRepositorySpec extends DBSpecBase {
 
         "the password is correct" should {
           "create the singer successfully" in { s =>
-            new WithPassword()(s) { // The setup steps require a session, which we pass in like this to make the implicits work
+            new WithPassword {
+              override implicit def dbSession = s
+
               singerRepository.joinSession(JoinSessionRequest(sessionId, "Bob", password = Some("password"))) match {
                 case Success(singer) =>
                   singer.id shouldNot be(None)
