@@ -4,6 +4,8 @@ import models._
 import org.virtuslab.unicorn.UnicornPlay._
 import org.virtuslab.unicorn.UnicornPlay.driver.simple._
 import play.api.db.slick.{Session => DBSession}
+import play.api.libs.json.Json
+import repositories.SingerRepositoryMessages._
 
 import scalaz.{Success, Failure, Validation}
 
@@ -11,11 +13,7 @@ import scalaz.{Success, Failure, Validation}
  * Created by hugh on 9/2/14.
  */
 
-trait SingerRepositoryComponent {
-  this: SessionRepositoryComponent =>
-
-  val singerRepository = new SingerRepository
-
+object SingerRepositoryMessages {
   case class JoinSessionRequest(sessionId: SessionId, name: String, password: Option[String] = None)
 
   sealed trait SessionErrors
@@ -23,6 +21,18 @@ trait SingerRepositoryComponent {
   case class NoSuchSession(sessionId: SessionId) extends SessionErrors
   case class InvalidPassword(sessionId: SessionId) extends SessionErrors
 
+  object SingerComponentFormatter {
+    import SessionFormatter._
+    implicit val joinSessionRequestReads = Json.reads[JoinSessionRequest]
+    implicit val joinSessionRequestWrites = Json.writes[JoinSessionRequest]
+
+  }
+}
+
+trait SingerRepositoryComponent {
+  this: SessionRepositoryComponent =>
+
+  val singerRepository = new SingerRepository
 
   // This should really be a trait but unicorn doesn't support it right now.
   // We can still do a mock of the final class instead though.

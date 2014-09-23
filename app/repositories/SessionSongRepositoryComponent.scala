@@ -12,7 +12,6 @@ trait SessionSongRepositoryComponent {
   val sessionSongRepository = new SessionSongRepository
 
   class SessionSongRepository extends BaseIdRepository[SessionSongId, models.SessionSong, SessionSongs](TableQuery[SessionSongs]) {
-    val q = query // temp for now
-
+    def bySessionQuery(sessionId: SessionId) = query.filter(_.sessionId === sessionId)
   }
 }

@@ -2,6 +2,7 @@ package repositories
 
 import fixtures.DBSpecBase
 import models.{Singer, UserId, Session, SessionId}
+import repositories.SingerRepositoryMessages._
 
 import scalaz.{Success, Failure}
 import play.api.db.slick.{Session => DBSession}

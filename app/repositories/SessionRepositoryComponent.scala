@@ -19,7 +19,7 @@ trait SessionRepositoryComponent {
   class SessionRepository extends BaseIdRepository[SessionId, models.Session, Sessions](TableQuery[Sessions]) {
 
     def withSongs(id: SessionId)(implicit dbSession: DBSession): Option[(models.Session, Seq[SessionSong])] = {
-      findById(id).map(s => (s, sessionSongRepository.q.filter(_.sessionId === s.id).list))
+      findById(id).map(s => (s, sessionSongRepository.bySessionQuery(id).list))
     }
   }
 }
