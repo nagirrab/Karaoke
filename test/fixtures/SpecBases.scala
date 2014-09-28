@@ -41,6 +41,20 @@ abstract class DBSpecBase extends fixture.WordSpec with Matchers with OptionValu
     }
   }
 
+  // If the other one doesn't work, try this:
+  def withRollback2[T](f: Session => T): T = {
+    implicit val session = DB.createSession()
+    session.conn.setAutoCommit(false)
+
+    session.withTransaction {
+      try {
+        f(session)
+      } finally {
+        session.rollback()
+      }
+    }
+  }
+
   override def withFixture(test: OneArgTest) = {
     withRollback { session => withFixture(test.toNoArgTest(session)) }
   }

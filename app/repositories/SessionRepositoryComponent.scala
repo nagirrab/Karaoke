@@ -21,5 +21,9 @@ trait SessionRepositoryComponent {
     def withSongs(id: SessionId)(implicit dbSession: DBSession): Option[(models.Session, Seq[SessionSong])] = {
       findById(id).map(s => (s, sessionSongRepository.bySessionQuery(id).list))
     }
+
+    private val acceptingSongsStates: Set[SessionStatus] = Set(AcceptingRequests, Open)
+
+    def isAcceptingRequests(session: models.Session): Boolean = acceptingSongsStates.contains(session.status)
   }
 }

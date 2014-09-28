@@ -13,8 +13,8 @@ import repositories.{SessionSongRepositoryComponent, SessionRepositoryComponent,
 import SingerFormatter._
 
 import scalaz.Success
+import repositories.SingerRepositoryMessages.SingerRepositoryMessageFormatter._
 
-import repositories.SingerRepositoryMessages.SingerComponentFormatter._
 
 class SessionSingerControllerSpec extends SpecBase {
   class TestController() extends SessionSingerController with SingerRepositoryComponent

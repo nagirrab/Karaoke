@@ -1,5 +1,6 @@
 package models
 
+import org.joda.time.DateTime
 import org.virtuslab.unicorn.UnicornPlay._
 import org.virtuslab.unicorn.UnicornPlay.driver.simple._
 import play.api.libs.json.Json
@@ -7,28 +8,51 @@ import play.api.libs.json.Json
 case class SessionId(id: Long) extends AnyVal with BaseId
 object SessionId extends IdCompanion[SessionId]
 
-case class Session(id: Option[SessionId] = None, name: String, userId: UserId, password: Option[String] = None,
-                   autoApprove: Boolean = true, autoOrder: Boolean = true, notes: String = "") extends WithId[SessionId]
+sealed trait SessionStatus
+
+case object AwaitingOpen extends SessionStatus
+case object AcceptingRequests extends SessionStatus
+case object Open extends SessionStatus
+case object NoMoreRequests extends SessionStatus
+case object Closed extends SessionStatus
+
+object SessionStatus extends SerializableEnum[SessionStatus] {
+  import scala.reflect._
+  val ct = classTag[SessionStatus]
+  def mapping = Map[String, SessionStatus](
+    "AWAITING_OPEN" -> AwaitingOpen,
+    "ACCEPTING_REQUESTS" -> AcceptingRequests,
+    "OPEN" -> Open,
+    "NO_MORE_REQUESTS" -> NoMoreRequests,
+    "CLOSED" -> Closed
+  )
+}
+
+case class Session(id: Option[SessionId] = None, name: String, userId: UserId,
+                   password: Option[String] = None, startDate: DateTime = DateTime.now,
+                   endDate: Option[DateTime] = None,
+                   autoApprove: Boolean = true, autoOrder: Boolean = true,
+                   status: SessionStatus = Open, notes: String = "") extends WithId[SessionId]
 
 class Sessions(tag: Tag)
   extends IdTable[SessionId, Session](tag, "sessions") {
 
   def name = column[String]("name")
   def userId = column[UserId]("user_id")
-  //def startDate = column[DateTime]("start_date")
-  //def endDate = column[DateTime]("end_date")
+  def startDate = column[DateTime]("start_date")
+  def endDate = column[Option[DateTime]]("end_date")
   def password = column[Option[String]]("password", O.Nullable)
   def autoApprove = column[Boolean]("auto_approve")
   def autoOrder = column[Boolean]("auto_order")
+  def status = column[SessionStatus]("status")
   def notes = column[String]("notes")
 
-
-  //def * = (id, name, startDate, endDate, password, autoApprove, autoOrder, notes) <> (Session.tupled, Session.unapply)
-  def * = (id.?, name, userId, password, autoApprove, autoOrder, notes) <> (Session.tupled, Session.unapply)
+  def * = (id.?, name, userId, password, startDate, endDate, autoApprove, autoOrder, status, notes) <> (Session.tupled, Session.unapply)
 }
 
 object SessionFormatter {
   import UserFormatter._
+  import SessionStatus._
   implicit val sessionIdReads = Json.reads[SessionId]
   implicit val sessionReads = Json.reads[Session]
   implicit val sessionIdWrites = Json.writes[SessionId]

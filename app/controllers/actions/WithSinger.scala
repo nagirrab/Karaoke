@@ -17,16 +17,16 @@ trait WithSinger extends WithDBSession {
         s <- singerRepository.findById(SingerId(sId))) yield s
 
 
-  def WithSinger[A](action: Singer => Action[A]): Action[A] = {
+  def WithSinger[A](action: (Singer, DBSession) => Action[A]): Action[A] = {
     WithDBSession { implicit dbSession =>
       val singerBodyParser = parse.using { request =>
-        getSingerFromRequest(request).map(u => action(u).parser).getOrElse {
+        getSingerFromRequest(request).map(u => action(u, dbSession).parser).getOrElse {
           parse.error(Future.successful(Unauthorized("you must blah blah qqHRB")))
         }
       }
 
       Action.async(singerBodyParser) { request =>
-        getSingerFromRequest(request).map(u => action(u)(request)).getOrElse(Future.successful(Unauthorized))
+        getSingerFromRequest(request).map(u => action(u, dbSession)(request)).getOrElse(Future.successful(Unauthorized))
       }
     }
   }

@@ -21,12 +21,11 @@ object SingerRepositoryMessages {
   case class NoSuchSession(sessionId: SessionId) extends SessionErrors
   case class InvalidPassword(sessionId: SessionId) extends SessionErrors
 
-  object SingerComponentFormatter {
+  object SingerRepositoryMessageFormatter {
     import SessionFormatter._
-    implicit val joinSessionRequestReads = Json.reads[JoinSessionRequest]
-    implicit val joinSessionRequestWrites = Json.writes[JoinSessionRequest]
-
+    implicit val joinSessionRequestFormatter = Json.format[JoinSessionRequest]
   }
+
 }
 
 trait SingerRepositoryComponent {

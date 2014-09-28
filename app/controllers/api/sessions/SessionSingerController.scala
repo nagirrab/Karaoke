@@ -5,7 +5,7 @@ import models.{SingerFormatter, SessionFormatter, SessionId}
 import play.api.db.slick.DBAction
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.{Controller, Action}
-import repositories.SingerRepositoryMessages.JoinSessionRequest
+import repositories.SingerRepositoryMessages.{SingerRepositoryMessageFormatter, JoinSessionRequest}
 import repositories.{SessionSongRepositoryComponent, SessionRepositoryComponent, SingerRepositoryComponent}
 
 import scalaz.{Failure, Success}
@@ -13,7 +13,7 @@ import scalaz.{Failure, Success}
 trait SessionSingerController extends Controller with WithDBSession {
   self: SingerRepositoryComponent =>
 
-  import repositories.SingerRepositoryMessages.SingerComponentFormatter._
+  import SingerRepositoryMessageFormatter._
   import SingerFormatter._
 
   def join() = WithDBSession { implicit dbSession =>
@@ -27,7 +27,6 @@ trait SessionSingerController extends Controller with WithDBSession {
       }
     }
   }
-
 
 }
 

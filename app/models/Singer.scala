@@ -24,8 +24,7 @@ class Singers(tag: Tag)
 object SingerFormatter {
   import UserFormatter._ //needed by the singer serializer
   import SessionFormatter._
-  implicit val singerIdReads = Json.reads[SingerId]
-  implicit val singerReads = Json.reads[Singer]
-  implicit val singerIdWrites = Json.writes[SingerId]
-  implicit val singerWrites = Json.writes[Singer]
+  implicit val singerIdFormat = Json.format[SingerId]
+
+  implicit val singerFormat = Json.format[Singer]
 }
