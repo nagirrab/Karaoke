@@ -22,11 +22,13 @@ trait SessionSongController extends Controller with WithDBSession with WithSinge
       val songRequest = Json.fromJson[RequestSongRequest](req.body)
 
       songRequest match {
-        case JsSuccess(r, _) => sessionSongRepository.requestSong(r, singer) match {
-          case Success(song) => Ok(Json.toJson(song))
-          case Failure(error) => BadRequest(error.toString)
-        }
+        case JsSuccess(r, p) =>
+          sessionSongRepository.requestSong(r, singer) match {
+            case Success(song) => Created(Json.toJson(song))
+            case Failure(error) => BadRequest(error.toString)
+          }
         case JsError(e) => BadRequest(e.toString())
+        case _ => BadRequest("wtf")
       }
 
     }
