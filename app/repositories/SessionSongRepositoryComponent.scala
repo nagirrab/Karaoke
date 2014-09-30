@@ -45,9 +45,13 @@ trait SessionSongRepositoryComponent {
       }
 
       sessionSuccess.flatMap { session =>
-        val unsaved = SessionSong(singerId = singer.id.get, sessionId = singer.sessionId, artist = req.artist, title = req.title)
+        val status = if(session.autoApprove) Queued else AwaitingApproval
+        val unsaved = SessionSong(singerId = singer.id.get, sessionId = singer.sessionId, artist = req.artist, title = req.title, status = status)
         Success(unsaved.copy(id = Option(save(unsaved))))
       }
     }
+
+    // For some reason _.status === Queued does not lift properly, so leave as a set operation
+    def availableSongsByDateQuery(sessionId: SessionId) = query.filter(_.status inSet Set(Queued)).sortBy(_.submitDate)
   }
 }
