@@ -5,6 +5,8 @@
 # Home page
 GET     /                           controllers.StaticController.index
 
+GET     /app                        controllers.AppController.index
+
 POST    /api/login                  controllers.api.UserController.login
 GET     /api/logout                 controllers.api.UserController.logout
 
@@ -14,5 +16,8 @@ GET     /api/sessions               controllers.api.SessionController.list()
 PUT     /api/sessions/:id           controllers.api.SessionController.update(id: models.SessionId)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+# GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /webjars/*file              controllers.WebJarAssets.at(file)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)

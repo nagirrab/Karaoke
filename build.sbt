@@ -10,8 +10,6 @@ testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")
 
 libraryDependencies ++= Seq(
 "org.webjars" % "webjars-play_2.10" % "2.3.0",
-  "org.webjars" % "angularjs" % "1.1.5-1",
-  "org.webjars" % "bootstrap" % "3.1.1",
   "org.scalatestplus" %% "play" % "1.2.0" % "test",
   "junit" % "junit" % "4.11" % "test",
   "com.novocode" % "junit-interface" % "0.7" % "test->default",
@@ -23,7 +21,12 @@ libraryDependencies ++= Seq(
   "com.chuusai" %% "shapeless" % "2.0.0",
   "org.virtuslab" %% "unicorn-play" % "0.6.0-M8",
   "org.mindrot" % "jbcrypt" % "0.3m",
-  "org.scalaz" %% "scalaz-core" % "7.1.0"
+  "org.scalaz" %% "scalaz-core" % "7.1.0",
+  "org.webjars" % "requirejs" % "2.1.14-1",
+  "org.webjars" % "underscorejs" % "1.6.0-3",
+  "org.webjars" % "jquery" % "1.11.1",
+  "org.webjars" % "bootstrap" % "3.1.1-2" exclude("org.webjars", "jquery"),
+  "org.webjars" % "angularjs" % "1.2.18" exclude("org.webjars", "jquery")
 )
 
 libraryDependencies ++= Seq(

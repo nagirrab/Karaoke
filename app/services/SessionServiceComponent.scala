@@ -7,10 +7,10 @@ import org.virtuslab.unicorn.UnicornPlay.driver.simple._
 
 import scala.slick.lifted.TableQuery
 
-trait SessionOrderingServiceComponent {
+trait SessionServiceComponent {
   this: SessionRepositoryComponent with SessionSongRepositoryComponent =>
 
-  trait SessionOrderingService {
+  trait SessionService {
     val orderingQuery = TableQuery[SessionSongOrders]
 
     def reorderSession(sessionId: SessionId)(implicit dbSession: DBSession): Seq[SessionSong] = {

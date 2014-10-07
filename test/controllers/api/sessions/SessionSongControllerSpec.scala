@@ -24,7 +24,7 @@ class SessionSongControllerSpec extends DBSpecBase with SingerSession {
     override val singerRepository = mock[SingerRepository]
   }
 
-  "SessionSongRepository#requestSong" when {
+  "SessionSongController#requestSong" when {
     abstract class WithController {
       implicit def dbSession: DBSession
       val controller = new TestController
@@ -53,7 +53,7 @@ class SessionSongControllerSpec extends DBSpecBase with SingerSession {
         new SuccessfulRequest {
           override implicit def dbSession = s
           Json.fromJson[SessionSong](contentAsJson(getResult(reqJson))) match {
-            case JsSuccess(`song`, _) =>
+            case JsSuccess(`song`, _) => // pass
             case _ => fail
           }
         }
