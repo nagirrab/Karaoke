@@ -1,7 +1,7 @@
 package models
 
-import org.virtuslab.unicorn.UnicornPlay._
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import play.api.libs.json.Json
 
 
@@ -24,7 +24,6 @@ class Singers(tag: Tag)
 object SingerFormatter {
   import UserFormatter._ //needed by the singer serializer
   import SessionFormatter._
-  implicit val singerIdFormat = Json.format[SingerId]
 
   implicit val singerFormat = Json.format[Singer]
 }

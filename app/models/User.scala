@@ -1,7 +1,7 @@
 package models
 
-import org.virtuslab.unicorn.UnicornPlay._
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import play.api.libs.json.Json
 
 /**
@@ -36,10 +36,6 @@ class Users(tag: Tag)
 }
 
 object UserFormatter {
-  implicit val userIdReads = Json.reads[UserId]
-  implicit val userReads = Json.reads[User]
-  implicit val userIdWrites = Json.writes[UserId]
-  implicit val userWrites = Json.writes[User]
-  implicit val userLoginAttemptReads = Json.reads[UserLoginAttempt]
-  implicit val userLoginAttemptWrites = Json.writes[UserLoginAttempt]
+  implicit val userFormat = Json.format[User]
+  implicit val userLoginAttemptFormat = Json.format[UserLoginAttempt]
 }

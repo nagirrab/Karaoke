@@ -1,8 +1,8 @@
 package repositories
 
 import models._
-import org.virtuslab.unicorn.UnicornPlay._
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.slick.{Session => DBSession}
 

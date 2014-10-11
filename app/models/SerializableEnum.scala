@@ -1,7 +1,7 @@
 package models
 
 import play.api.libs.json._
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import scala.reflect.ClassTag
 
 trait SerializableEnum[T] {

@@ -3,7 +3,7 @@ package services
 import models.{SessionSongOrder, SessionSong, SessionSongOrders, SessionId}
 import play.api.db.slick.{Session => DBSession}
 import repositories.{SessionSongRepositoryComponent, SessionRepositoryComponent}
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 
 import scala.slick.lifted.TableQuery
 

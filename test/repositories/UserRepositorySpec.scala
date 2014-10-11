@@ -3,8 +3,8 @@ package repositories
 import fixtures.{DBSpecBase, SpecBase}
 import models.{UserCreationFailed, UserCreationAttempt, User}
 import org.mindrot.jbcrypt.BCrypt
-import org.virtuslab.unicorn.UnicornPlay._
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import scala.slick.jdbc.JdbcBackend
 import play.api.db.slick.{DB, DBAction}
 

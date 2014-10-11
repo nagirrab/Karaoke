@@ -4,7 +4,7 @@ import fixtures.DBSpecBase
 import models.Session
 import models._
 import org.mindrot.jbcrypt.BCrypt
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 
 import scala.slick.jdbc.JdbcBackend
 

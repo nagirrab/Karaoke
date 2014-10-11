@@ -1,6 +1,6 @@
 package models
 
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 
 case class SessionSongOrder(sessionId: SessionId, songId: SessionSongId, order: Int)
 

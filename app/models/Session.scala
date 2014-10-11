@@ -1,8 +1,8 @@
 package models
 
 import org.joda.time.DateTime
-import org.virtuslab.unicorn.UnicornPlay._
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import play.api.libs.json.Json
 
 case class SessionId(id: Long) extends AnyVal with BaseId
@@ -51,10 +51,5 @@ class Sessions(tag: Tag)
 }
 
 object SessionFormatter {
-  import UserFormatter._
-  import SessionStatus._
-  implicit val sessionIdReads = Json.reads[SessionId]
-  implicit val sessionReads = Json.reads[Session]
-  implicit val sessionIdWrites = Json.writes[SessionId]
-  implicit val sessionWrites = Json.writes[Session]
+  implicit val sessionFormat = Json.format[Session]
 }

@@ -6,7 +6,7 @@ import models._
 import org.joda.time.DateTime
 import play.api.db.slick._
 import repositories.SessionSongRepositoryMessages.{SessionNotAcceptingSongs, InvalidSession, RequestSongRequest}
-import org.virtuslab.unicorn.UnicornPlay.driver.simple._
+import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import scalaz.{Success, Failure}
 import play.api.db.slick.{Session => DBSession}
 
