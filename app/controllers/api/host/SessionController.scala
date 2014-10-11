@@ -1,4 +1,4 @@
-package controllers.api
+package controllers.api.host
 
 import controllers.actions.Security
 import models.SessionFormatter._
@@ -12,13 +12,12 @@ import repositories.{SessionSongRepositoryComponent, SessionRepositoryComponent}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+object SessionController extends SessionController with SessionRepositoryComponent with SessionSongRepositoryComponent
+
 trait SessionController extends Controller with Security {
   self: SessionRepositoryComponent =>
   def create() = DBAction(parse.json) { rs =>
-
     implicit val session = rs.dbSession
-
-    val date = Json.fromJson[org.joda.time.DateTime](rs.body \ "startDate")
 
     val newSession = Json.fromJson[models.Session](rs.body)
 
@@ -61,5 +60,3 @@ trait SessionController extends Controller with Security {
     }
   }
 }
-
-object SessionController extends SessionController with SessionRepositoryComponent with SessionSongRepositoryComponent

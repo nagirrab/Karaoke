@@ -1,4 +1,4 @@
-package controllers.api
+package controllers.api.host
 
 import fixtures.SpecBase
 import models.{UserId, SessionId, Session}
@@ -171,12 +171,7 @@ class SessionControllerSpec extends SpecBase {
           status(getResult(SessionId(1), invalidData)) shouldEqual UNPROCESSABLE_ENTITY
         }
       }
-
-
     }
-
-
-
   }
 
 }

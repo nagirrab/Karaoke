@@ -1,4 +1,5 @@
-package controllers.api.sessions
+package controllers.api.singer
+
 
 import fixtures.SpecBase
 import org.mockito.Mockito._

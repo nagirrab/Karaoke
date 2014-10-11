@@ -1,4 +1,5 @@
-package controllers.api.sessions
+package controllers.api.singer
+
 
 import fixtures.{DBSpecBase, SingerSession, SpecBase}
 import models._
@@ -19,7 +20,7 @@ import scalaz.Success
 
 class SessionSongControllerSpec extends DBSpecBase with SingerSession {
   class TestController() extends SessionSongController with SessionSongRepositoryComponent
-    with SessionRepositoryComponent with SingerRepositoryComponent {
+  with SessionRepositoryComponent with SingerRepositoryComponent {
     override val sessionSongRepository = mock[SessionSongRepository]
     override val singerRepository = mock[SingerRepository]
   }

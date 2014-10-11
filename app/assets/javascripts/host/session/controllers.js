@@ -53,6 +53,14 @@ define([], function() {
       };
   HostEditSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'flash'];
 
+  var HostSongSessionCtrl = function(Session, $scope, $rootScope, $location, $routeParams, flash) {
+          $rootScope.pageTitle = 'Edit Session Details';
+          $scope.sessionId = $routeParams.sessionId;
+          $scope.session = Session.get({sessionId: $scope.sessionId});
+
+        };
+    HostSongSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'flash'];
+
 
   /** Controls the header */
   var HeaderCtrl = function($scope, helper, $location) {
@@ -81,7 +89,8 @@ define([], function() {
     HeaderCtrl: HeaderCtrl,
     FooterCtrl: FooterCtrl,
     HostCreateSessionCtrl: HostCreateSessionCtrl,
-    HostEditSessionCtrl: HostEditSessionCtrl
+    HostEditSessionCtrl: HostEditSessionCtrl,
+    HostSongSessionCtrl: HostSongSessionCtrl
   };
 
 });

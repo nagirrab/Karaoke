@@ -1,4 +1,5 @@
-package controllers.api.sessions
+package controllers.api.singer
+
 
 import controllers.actions.{WithSinger, WithDBSession}
 import models.SessionSongFormatter
