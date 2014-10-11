@@ -18,6 +18,8 @@ trait SessionController extends Controller with Security {
 
     implicit val session = rs.dbSession
 
+    val date = Json.fromJson[org.joda.time.DateTime](rs.body \ "startDate")
+
     val newSession = Json.fromJson[models.Session](rs.body)
 
     newSession.map(sessionRepository.save).map(sessionRepository.findById) match {

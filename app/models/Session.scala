@@ -3,7 +3,7 @@ package models
 import org.joda.time.DateTime
 import org.virtuslab.unicorn.LongUnicornPlay._
 import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
-import play.api.libs.json.Json
+import play.api.libs.json.{DefaultReads, Json}
 
 case class SessionId(id: Long) extends AnyVal with BaseId
 object SessionId extends IdCompanion[SessionId]
@@ -50,6 +50,7 @@ class Sessions(tag: Tag)
   def * = (id.?, name, userId, password, startDate, endDate, autoApprove, autoOrder, status, notes) <> (Session.tupled, Session.unapply)
 }
 
-object SessionFormatter {
+object SessionFormatter extends DefaultReads {
+  implicit val dateTimeReads = jodaDateReads("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
   implicit val sessionFormat = Json.format[Session]
 }

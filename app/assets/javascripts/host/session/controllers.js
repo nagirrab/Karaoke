@@ -1,17 +1,57 @@
 define([], function() {
   'use strict';
 
-  /** Controls the index page */
-  var HostCtrl = function($scope, $rootScope, $location, helper) {
-    console.log(helper.sayHi());
-    $rootScope.pageTitle = 'Welcome';
-  };
-  HostCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper'];
-
-  var CreateHostCtrl = function($scope, $rootScope, $location) {
+  var HostCreateSessionCtrl = function(Session, $scope, $rootScope, $location) {
       $rootScope.pageTitle = 'Create a Session';
+      $scope.session = {
+        autoOrder: false,
+        autoApprove: true,
+        userId: 1,
+        startDate: new Date,
+        status: "OPEN",
+        notes: ""
+      };
+
+      $scope.submit = function() {
+       $scope.$broadcast('show-errors-check-validity');
+
+        if ($scope.sessionForm.$valid) {
+          Session.save($scope.session, function(newSession) {
+            $location.path("host/session/" + newSession.id + "/settings");
+          })
+        }
+
+      };
     };
-  CreateHostCtrl.$inject = ['$scope', '$rootScope', '$location'];
+  HostCreateSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location'];
+
+  var HostEditSessionCtrl = function(Session, $scope, $rootScope, $location, $routeParams, flash) {
+        $rootScope.pageTitle = 'Edit Session Details';
+        $scope.sessionId = $routeParams.sessionId;
+        $scope.session = Session.get({sessionId: $scope.sessionId});
+
+        $scope.submit = function() {
+         $scope.$broadcast('show-errors-check-validity');
+
+          if ($scope.sessionForm.$valid) {
+            Session.save({sessionId: $scope.sessionId}, $scope.session,
+            function(successResult) {
+              flash.success({
+                   text: "Success message",
+                   seconds: 10
+                 });
+            },
+            function(failureResult) {
+              alert("error")
+            }
+            )
+          } else {
+            alert("validation error");
+          }
+
+        };
+      };
+  HostEditSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'flash'];
 
 
   /** Controls the header */
@@ -40,8 +80,8 @@ define([], function() {
   return {
     HeaderCtrl: HeaderCtrl,
     FooterCtrl: FooterCtrl,
-    HostCtrl: HostCtrl,
-    CreateHostCtrl: CreateHostCtrl
+    HostCreateSessionCtrl: HostCreateSessionCtrl,
+    HostEditSessionCtrl: HostEditSessionCtrl
   };
 
 });

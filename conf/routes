@@ -14,6 +14,7 @@ POST    /api/sessions               controllers.api.SessionController.create()
 GET     /api/sessions/:id           controllers.api.SessionController.show(id: models.SessionId)
 GET     /api/sessions               controllers.api.SessionController.list()
 PUT     /api/sessions/:id           controllers.api.SessionController.update(id: models.SessionId)
+POST    /api/sessions/:id           controllers.api.SessionController.update(id: models.SessionId)
 
 # Map static resources from the /public folder to the /assets URL path
 # GET     /assets/*file               controllers.Assets.at(path="/public", file)

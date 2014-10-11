@@ -8,6 +8,12 @@ define([], function() {
   };
   HostCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper'];
 
+  var CreateHostCtrl = function($scope, $rootScope, $location) {
+      $rootScope.pageTitle = 'Create a Session';
+    };
+  CreateHostCtrl.$inject = ['$scope', '$rootScope', '$location'];
+
+
   /** Controls the header */
   var HeaderCtrl = function($scope, helper, $location) {
     // Wrap the current user from the service in a watch expression
@@ -34,7 +40,8 @@ define([], function() {
   return {
     HeaderCtrl: HeaderCtrl,
     FooterCtrl: FooterCtrl,
-    HostCtrl: HostCtrl
+    HostCtrl: HostCtrl,
+    CreateHostCtrl: CreateHostCtrl
   };
 
 });

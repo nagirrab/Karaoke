@@ -1,4 +1,4 @@
-<h1>Create a new session</h1>
+<h1>Session Settings</h1>
 
 <form name="sessionForm">
     <div class="form-group" data-show-errors>
@@ -26,10 +26,15 @@
     </div>
 
     <div class="form-group">
+        <label for="notes">Status</label>
+        <select data-ng-model="session.status" id="status" data-ng-required data-ng-options=""/>
+    </div>
+
+    <div class="form-group">
         <label for="notes">Notes</label>
         <textarea data-ng-model="session.notes"  class="form-control" id="notes"></textarea>
     </div>
 
 
-    <button data-ng-click="submit()" type="submit" class="btn btn-default">Submit</button>
+    <button data-ng-click="submit()" type="submit" class="btn btn-default">Update</button>
 </form>

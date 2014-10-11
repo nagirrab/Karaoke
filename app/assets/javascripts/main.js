@@ -5,7 +5,7 @@
   // -- RequireJS config --
   requirejs.config({
     // Packages = top-level folders; loads a contained file named 'main.js"
-    packages: ['common', 'host', 'singer'],
+    packages: ['common', 'host', 'singer', 'host/session'],
     shim: {
       // Hopefully this all will not be necessary but can be fetched from WebJars in the future
       'angular': {
@@ -14,7 +14,9 @@
       },
       'angular-route': ['angular'],
       'angular-cookies': ['angular'],
-      'bootstrap': ['jquery']
+      'angular-resource': ['angular'],
+      'bootstrap': ['jquery'],
+      'angular-showErrors': ['angular']
     },
     paths: {
       'requirejs': ['../lib/requirejs/require'],
@@ -22,6 +24,8 @@
       'angular': ['../lib/angularjs/angular'],
       'angular-route': ['../lib/angularjs/angular-route'],
       'angular-cookies': ['../lib/angularjs/angular-cookies'],
+      'angular-resource': ['../lib/angularjs/angular-resource'],
+      'angular-showErrors': ['/assets/js/vendor/showErrors'],
       'bootstrap': ['../lib/bootstrap/js/bootstrap'],
     }
   });
@@ -31,7 +35,7 @@
   };
 
   // Load the app. This is kept minimal so it doesn't need much updating.
-  require(['angular', 'angular-cookies', 'angular-route', 'jquery', 'bootstrap', './app'],
+  require(['angular', 'angular-cookies', 'angular-route', 'angular-resource', 'angular-showErrors', 'jquery', 'bootstrap', './app'],
     function (angular) {
       angular.bootstrap(document, ['app']);
     }
