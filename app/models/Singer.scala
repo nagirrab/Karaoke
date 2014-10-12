@@ -5,7 +5,7 @@ import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import play.api.libs.json.Json
 
 
-case class SingerId(id: Long) extends AnyVal with BaseId
+case class SingerId(id: Long) extends BaseId
 object SingerId extends IdCompanion[SingerId]
 
 case class Singer(id: Option[SingerId] = None, name: String, sessionId: SessionId, userId: Option[UserId] = None) extends WithId[SingerId]

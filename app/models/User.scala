@@ -8,7 +8,7 @@ import play.api.libs.json.Json
  * Created by hugh on 8/27/14.
  */
 
-case class UserId(id: Long) extends AnyVal with BaseId
+case class UserId(id: Long) extends BaseId
 object UserId extends IdCompanion[UserId]
 
 case class User(id: Option[UserId], name: String, email: String, passwordHash: String, passwordSalt: String) extends WithId[UserId]

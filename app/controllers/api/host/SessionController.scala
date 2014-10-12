@@ -46,6 +46,18 @@ trait SessionController extends Controller with Security {
     }
   }
 
+  def songs(id: SessionId) = Action.async { req =>
+    import models.SessionSongFormatter._
+    Future {
+      DB.withSession { implicit s =>
+        sessionRepository.withSongs(id) match {
+          case Some((session, songs)) => Ok(Json.toJson(songs))
+          case _ => NotFound(Json.toJson(Map("error" -> "Not Found")))
+        }
+      }
+    }
+  }
+
   def update(id: SessionId) = DBAction(parse.json) { rs =>
     implicit val session = rs.dbSession
 

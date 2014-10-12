@@ -5,7 +5,7 @@ import org.virtuslab.unicorn.LongUnicornPlay._
 import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import play.api.libs.json.{DefaultReads, Json}
 
-case class SessionId(id: Long) extends AnyVal with BaseId
+case class SessionId(id: Long) extends BaseId
 object SessionId extends IdCompanion[SessionId]
 
 sealed trait SessionStatus
