@@ -13,14 +13,6 @@ object UserId extends IdCompanion[UserId]
 
 case class User(id: Option[UserId], name: String, email: String, passwordHash: String, passwordSalt: String) extends WithId[UserId]
 
-case class UserLoginAttempt(email: String, rawPassword: String)
-
-case class UserCreationAttempt(name: String, email: String, password: String)
-
-case class UserCreationFailed(reason: String)
-
-
-
 class Users(tag: Tag)
   extends IdTable[UserId, User](tag, "users") {
 
@@ -37,5 +29,4 @@ class Users(tag: Tag)
 
 object UserFormatter {
   implicit val userFormat = Json.format[User]
-  implicit val userLoginAttemptFormat = Json.format[UserLoginAttempt]
 }

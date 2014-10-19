@@ -9,12 +9,24 @@ GET     /app                        controllers.AppController.index
 
 POST    /api/login                  controllers.api.UserController.login
 GET     /api/logout                 controllers.api.UserController.logout
+GET     /api/currentUser            controllers.api.UserController.currentUser
+
+POST    /api/user/create            controllers.api.UserController.create
 
 POST    /api/host/sessions               controllers.api.host.SessionController.create()
 GET     /api/host/sessions/:id           controllers.api.host.SessionController.show(id: models.SessionId)
+GET     /api/host/sessions/:id/songs     controllers.api.host.SessionController.songs(id: models.SessionId)
 GET     /api/host/sessions               controllers.api.host.SessionController.list()
 PUT     /api/host/sessions/:id           controllers.api.host.SessionController.update(id: models.SessionId)
 POST    /api/host/sessions/:id           controllers.api.host.SessionController.update(id: models.SessionId)
+
+POST    /api/singer/sessions/join        controllers.api.singer.SessionSingerController.join
+POST    /api/singer/sessions/rejoin      controllers.api.singer.SessionSingerController.rejoin
+POST    /api/singer/sessions/request     controllers.api.singer.SessionSongController.requestSong
+GET     /api/singer/sessions/activeSongs controllers.api.singer.SessionSongController.activeSongs
+GET     /api/singer/current              controllers.api.singer.SessionSingerController.currentSinger
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 # GET     /assets/*file               controllers.Assets.at(path="/public", file)
@@ -22,3 +34,6 @@ GET     /webjars/*file              controllers.WebJarAssets.at(file)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+
+# JavaScript routes object
+GET     /jsroutes.js            controllers.StaticController.jsRoutes()

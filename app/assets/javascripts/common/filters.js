@@ -16,5 +16,6 @@ define(['angular'], function(angular) {
       }
     }
   });
+
   return mod;
 });

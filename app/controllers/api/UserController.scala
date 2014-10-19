@@ -1,14 +1,15 @@
 package controllers.api
 
-import controllers.actions.{WithDBSession, Security}
-import models.UserLoginAttempt
+import controllers.actions.{WithUser, WithDBSession, Security}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
 import repositories.UserRepositoryComponent
 import models.UserFormatter._
+import repositories.UserRepositoryMessages._
 
+import scala.concurrent.Future
 
-trait UserController extends Controller with Security with WithDBSession {
+trait UserController extends Controller with Security with WithDBSession with WithUser {
   self: UserRepositoryComponent =>
 
   def login = WithDBSession { implicit dbSession =>
@@ -16,7 +17,7 @@ trait UserController extends Controller with Security with WithDBSession {
       val loginAttempt = Json.fromJson[UserLoginAttempt](req.body)
 
       loginAttempt.map(userRepository.login) match {
-        case JsSuccess(Some(u), _) if u.id.nonEmpty => Ok("logged in").withSession(req.session + ("userId" -> u.id.get.id.toString))
+        case JsSuccess(Some(u), _) if u.id.nonEmpty => Ok(Json.toJson(u)).withSession(req.session + ("userId" -> u.id.get.id.toString))
         case JsSuccess(_, _) => BadRequest("no such user").withSession(req.session - "userId")
         case JsError(e) => BadRequest(e.toString)
       }
@@ -27,6 +28,23 @@ trait UserController extends Controller with Security with WithDBSession {
     Ok("logged out").withSession(req.session - "userId")
   }
 
+  def currentUser = WithUser { (user, dbSession) =>
+    Action {
+      Ok(Json.toJson(user))
+    }
+  }
+
+  def create = WithDBSession { implicit dbSession =>
+    Action(parse.tolerantJson) { req =>
+      val creationAttempt = Json.fromJson[UserCreationAttempt](req.body)
+
+      creationAttempt.map(userRepository.create) match {
+        case JsSuccess(Right(user), _) => Created(Json.toJson(user))
+        case JsSuccess(Left(failure), _) => UnprocessableEntity(Json.toJson(failure.reason))
+        case JsError(e) => BadRequest(e.toString())
+      }
+    }
+  }
 
 }
 

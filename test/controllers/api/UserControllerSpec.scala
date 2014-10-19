@@ -2,7 +2,7 @@ package controllers.api
 
 import fixtures.{DBSpecBase, SpecBase}
 import models.UserFormatter._
-import models.{UserLoginAttempt, User, UserId}
+import models.{User, UserId}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.db.slick.{Session => DBSession}
@@ -10,6 +10,7 @@ import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.UserRepositoryComponent
+import repositories.UserRepositoryMessages.UserLoginAttempt
 
 /**
  * Created by hugh on 9/2/14.

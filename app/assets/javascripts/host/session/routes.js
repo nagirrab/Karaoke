@@ -10,7 +10,7 @@ define(['angular', './controllers', 'common'], function(angular, controllers) {
     $routeProvider
       .when('/host/session/create',  {templateUrl: '/assets/javascripts/host/session/create.html', controller:controllers.HostCreateSessionCtrl})
       .when('/host/session/:sessionId/settings',  {templateUrl: '/assets/javascripts/host/session/settings.html', controller:controllers.HostEditSessionCtrl})
-      .when('/host/session/:sessionId',  {templateUrl: '/assets/javascripts/host/session/songs.html', controller:controllers.HostEditSessionCtrl});
+      .when('/host/session/:sessionId',  {templateUrl: '/assets/javascripts/host/session/songs.html', controller:controllers.HostSongSessionCtrl});
   }]);
   return mod;
 });

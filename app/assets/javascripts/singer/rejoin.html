@@ -1,0 +1,14 @@
+<h1>Rejoin {{session.name}}</h1>
+
+If you need to rejoin a session, do it here.
+
+<form name="rejoinForm">
+  <fieldset>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" class="form-control" data-ng-model="rejoinReq.name" placeholder="Enter a name" required /><br />
+    </div>
+
+    <button class="btn btn-primary" data-ng-disabled="rejoinForm.$invalid" data-ng-click="rejoin()">Join</button>
+  </fieldset>
+</form>

@@ -5,10 +5,21 @@ import org.virtuslab.unicorn.LongUnicornPlay._
 import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
 import org.mindrot.jbcrypt.BCrypt
 import play.api.db.slick.{Session => DBSession}
+import play.api.libs.json.Json
+import repositories.UserRepositoryMessages.{UserCreationFailed, UserCreationAttempt, UserLoginAttempt}
 
 /**
  * Created by hugh on 9/2/14.
  */
+
+object UserRepositoryMessages {
+  case class UserCreationAttempt(name: String, email: String, password: String)
+  case class UserCreationFailed(reason: String)
+  case class UserLoginAttempt(email: String, password: String)
+
+  implicit val userCreationFormat = Json.format[UserCreationAttempt]
+  implicit val userLoginAttemptFormat = Json.format[UserLoginAttempt]
+}
 
 trait UserRepositoryComponent {
   val userRepository = new UserRepository
@@ -23,7 +34,7 @@ trait UserRepositoryComponent {
       val userByEmail = findByEmailQuery(attempt.email).run.headOption
 
       userByEmail.filter { u =>
-        val passwordHashAttempt = BCrypt.hashpw(attempt.email, u.passwordSalt)
+        val passwordHashAttempt = BCrypt.hashpw(attempt.password, u.passwordSalt)
         passwordHashAttempt == u.passwordHash
       }
     }

@@ -15,15 +15,18 @@ import scalaz.{Success, Failure, Validation}
 
 object SingerRepositoryMessages {
   case class JoinSessionRequest(sessionId: SessionId, name: String, password: Option[String] = None)
+  case class RejoinSessionRequest(sessionId: SessionId, name: String)
 
   sealed trait SessionErrors
   case class NameAlreadyTaken(name: String) extends SessionErrors
   case class NoSuchSession(sessionId: SessionId) extends SessionErrors
   case class InvalidPassword(sessionId: SessionId) extends SessionErrors
+  case class SingerNotFound(sessionId: SessionId) extends SessionErrors
 
   object SingerRepositoryMessageFormatter {
     import SessionFormatter._
     implicit val joinSessionRequestFormatter = Json.format[JoinSessionRequest]
+    implicit val rejoinSessionRequestFormatter = Json.format[RejoinSessionRequest]
   }
 
 }
@@ -51,6 +54,13 @@ trait SingerRepositoryComponent {
           }
         }
         case None => Failure(NoSuchSession(req.sessionId))
+      }
+    }
+
+    def rejoinSession(req: RejoinSessionRequest)(implicit dbSession: DBSession) = {
+      query.filter(_.sessionId === req.sessionId).filter(_.name === req.name).run.headOption match {
+        case Some(s) => Success(s)
+        case _ => Failure(SingerNotFound(req.sessionId))
       }
     }
   }

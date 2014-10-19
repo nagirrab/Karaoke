@@ -1,1 +1,27 @@
-Song list here.
+<h1>{{session.name}}</h1>
+<div>
+  <select ng-model="session.status" ng-options="status for status in statusOptions" ng-change="updateStatus()"></select>
+</div>
+
+<div ng-show="!currentSong" class="well">
+  No current song
+</div>
+
+<div ng-show="currentSong" class="well">
+  <h3>{{currentSong.title}}</h3>
+  <h4>{{currentSong.artist}}</h4>
+</div>
+
+<div>
+  <button type="button" class="btn btn-primary">Finish Song</button>
+  <button type="button" class="btn btn-primary">Do Something else</button>
+</div>
+
+<div>
+  Songs:
+
+  <ul data-ng-repeat="song in songs">
+    <li>{{song.title}}</li>
+  </ul>
+
+</div>

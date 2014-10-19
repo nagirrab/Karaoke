@@ -1,10 +1,11 @@
 package repositories
 
 import fixtures.{DBSpecBase, SpecBase}
-import models.{UserCreationFailed, UserCreationAttempt, User}
+import models.User
 import org.mindrot.jbcrypt.BCrypt
 import org.virtuslab.unicorn.LongUnicornPlay._
 import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
+import repositories.UserRepositoryMessages.{UserCreationFailed, UserCreationAttempt}
 import scala.slick.jdbc.JdbcBackend
 import play.api.db.slick.{DB, DBAction}
 

@@ -26,13 +26,15 @@ libraryDependencies ++= Seq(
   "org.webjars" % "underscorejs" % "1.6.0-3",
   "org.webjars" % "jquery" % "1.11.1",
   "org.webjars" % "bootstrap" % "3.1.1-2" exclude("org.webjars", "jquery"),
-  "org.webjars" % "angularjs" % "1.2.18" exclude("org.webjars", "jquery")
+  "org.webjars" % "angularjs" % "1.2.18" exclude("org.webjars", "jquery"),
+  "net.sf.supercsv" % "super-csv" % "2.2.0"
 )
 
 libraryDependencies ++= Seq(
   jdbc,
   cache,
-  ws
+  ws,
+  filters
 )
 
 javaOptions += "-Dconfig.resource=" + Option(System.getenv("PLAY_ENV")).orElse(Option(System.getProperty("env"))).getOrElse("application") + ".conf"

@@ -35,6 +35,14 @@ trait SessionSongController extends Controller with WithDBSession with WithSinge
     }
   }
 
+  def activeSongs() = WithSinger { (singer, dbSession) =>
+    implicit val db = dbSession
+
+    Action { req =>
+      Ok(Json.toJson(sessionSongRepository.activeSongsBySinger(singer.id.get)))
+    }
+  }
+
 }
 
 object SessionSongController

@@ -5,12 +5,17 @@
   // -- RequireJS config --
   requirejs.config({
     // Packages = top-level folders; loads a contained file named 'main.js"
-    packages: ['common', 'host', 'singer', 'host/session'],
+    packages: ['common', 'host', 'host/session', 'singer', 'user'],
     shim: {
       // Hopefully this all will not be necessary but can be fetched from WebJars in the future
       'angular': {
         deps: ['jquery'],
         exports: 'angular'
+      },
+      'jsRoutes': {
+        deps: [],
+        // it's not a RequireJS module, so we have to tell it what var is returned
+        exports: 'jsRoutes'
       },
       'angular-route': ['angular'],
       'angular-cookies': ['angular'],
@@ -27,6 +32,7 @@
       'angular-resource': ['../lib/angularjs/angular-resource'],
       'angular-showErrors': ['/assets/js/vendor/showErrors'],
       'bootstrap': ['../lib/bootstrap/js/bootstrap'],
+      'jsRoutes': ['/jsroutes'],
     }
   });
 

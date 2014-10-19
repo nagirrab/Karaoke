@@ -34,10 +34,11 @@ trait SessionSongRepositoryComponent {
   val sessionSongRepository = new SessionSongRepository
 
   class SessionSongRepository extends BaseIdRepository[SessionSongId, models.SessionSong, SessionSongs](TableQuery[SessionSongs]) {
+    private val activeStates: Set[SongStatus] = Set(AwaitingApproval, Queued, OnDeck)
+
     def bySessionQuery(sessionId: SessionId) = query.filter(_.sessionId === sessionId)
 
     def requestSong(req: RequestSongRequest, singer: Singer)(implicit dbSession: DBSession): Validation[RequestSongErrors, SessionSong] = {
-
       val sessionSuccess = sessionRepository.findById(singer.sessionId) match {
         case None => Failure(InvalidSession(singer.sessionId))
         case Some(s) if !sessionRepository.isAcceptingRequests(s) => Failure(SessionNotAcceptingSongs(singer.sessionId))
@@ -53,5 +54,9 @@ trait SessionSongRepositoryComponent {
 
     // For some reason _.status === Queued does not lift properly, so leave as a set operation
     def availableSongsByDateQuery(sessionId: SessionId) = query.filter(_.status inSet Set(Queued)).sortBy(_.submitDate)
+
+    def activeSongsBySinger(singerId: SingerId)(implicit dbSession: DBSession) = {
+      query.filter(_.singerId === singerId).filter(_.status inSet activeStates).list
+    }
   }
 }

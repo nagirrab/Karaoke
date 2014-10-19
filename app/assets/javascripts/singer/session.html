@@ -1,0 +1,23 @@
+<div>
+  <button ng-click="addRequest()" class="btn btn-primary">Request a song</button>
+</div>
+
+<div>
+  <h2>Upcoming songs</h2>
+  <div ng-show="!activeSongs.length">You have no active songs</div>
+  <div ng-repeat="song in activeSongs">
+    <div>
+      <b>{{song.title}}</b> by {{song.artist}}
+      <br/>
+      <small>{{song.status}}</small>
+    </div>
+
+  </div>
+
+</div>
+
+<div>
+  <h2>Finished songs</h2>
+  <div ng-show="!finishedSongs.length">You have no finished songs</div>
+
+</div>
