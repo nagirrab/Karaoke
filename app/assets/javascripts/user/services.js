@@ -13,9 +13,9 @@ define(['angular', 'common'], function (angular) {
     if (token && user === undefined) {
       $log.info('Restoring user from cookie...');
       playRoutes.controllers.api.UserController.currentUser().get()
-        .success(function (data) {
-          $log.info('Welcome back, ' + data.name);
-          user = data;
+        .success(function (response) {
+          user = response.data;
+          $log.info('Welcome back, ' + user.name);
           $cookies['USER_ID'] = user.id;
           token = user.id;
         })
@@ -46,10 +46,10 @@ define(['angular', 'common'], function (angular) {
         });
       },
       signUp: function (user) {
-        return playRoutes.controllers.api.UserController.create().post(user).then(function (user) {
+        return playRoutes.controllers.api.UserController.create().post(user).then(function (response) {
+          user = response.data;
           $cookies['USER_ID'] = user.id;
           token = user.id;
-          user = user.id;
           $log.info("Created " + user.name);
         });
       },
@@ -79,7 +79,6 @@ define(['angular', 'common'], function (angular) {
    */
   var handleRouteError = function ($rootScope, $location) {
     $rootScope.$on('$routeChangeError', function (/*e, next, current*/) {
-    debugger
       $location.path('/');
     });
   };

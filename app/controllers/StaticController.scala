@@ -17,7 +17,7 @@ object StaticController extends Controller {
    * @todo If you have controllers in multiple packages, you need to add each package here.
    */
   val routeCache = {
-    val jsRoutesClasses = List(classOf[routes.javascript], classOf[api.routes.javascript], classOf[api.host.routes.javascript], classOf[api.singer.routes.javascript])
+    val jsRoutesClasses = List(classOf[routes.javascript], classOf[api.routes.javascript], classOf[api.host.routes.javascript], classOf[api.singer.routes.javascript], classOf[api.common.routes.javascript])
     val controllers = jsRoutesClasses.flatMap(_.getFields).map(_.get(null))
     controllers.flatMap { controller =>
       controller.getClass.getDeclaredMethods.map { action =>

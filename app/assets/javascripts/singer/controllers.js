@@ -29,6 +29,34 @@ define([], function() {
 
     };
 
+    $scope.manualMode = false;
+
+    $scope.doSearch = function(text) {
+      return playRoutes.controllers.api.common.SongController.search(text).get().then(function(response) {
+        return response.data.map(function(s) { s.summary = s.title + " - " + s.artist; return s });
+      });
+    }
+
+    // See https://github.com/angular-ui/bootstrap/issues/981 for a discussion of this
+    $scope.formatLabel = function(model) {
+      for (var i=0; i< $scope.states.length; i++) {
+        if (model === $scope.states[i].abbreviation) {
+          return $scope.states[i].name;
+        }
+      }
+    }
+
+    $scope.doDebug = function() {
+     debugger;
+    }
+
+//    $scope.testSongs = $scope.doSearch('want');
+    $scope.testSongs = [];
+    playRoutes.controllers.api.common.SongController.search("Want").get().then(function(response) {
+         $scope.testSongs =  response.data.map(function(s) { s.summary = s.title + " - " + s.artist; return s });
+       })
+
+
     $scope.submitRequest = function() {
       var result = playRoutes.controllers.api.singer.SessionSongController.requestSong().post($scope.request);
 
@@ -38,7 +66,6 @@ define([], function() {
         alert("failure")
       });
     }
-
   };
   RequestCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes'];
 

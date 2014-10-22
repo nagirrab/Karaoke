@@ -26,6 +26,7 @@ POST    /api/singer/sessions/request     controllers.api.singer.SessionSongContr
 GET     /api/singer/sessions/activeSongs controllers.api.singer.SessionSongController.activeSongs
 GET     /api/singer/current              controllers.api.singer.SessionSingerController.currentSinger
 
+GET     /api/common/songs/search/:term   controllers.api.common.SongController.search(term: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

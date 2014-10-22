@@ -18,5 +18,9 @@ trait SongRepositoryComponent {
   class SongRepository extends BaseIdRepository[SongId, models.Song, Songs](TableQuery[Songs]) {
 
     def byArtistAndTitleQuery(artist: String, title: String) = query.filter(_.artist === artist).filter(_.title === title)
+
+    def fuzzyQuery(term: String) = query.filter { row =>
+      (row.artist.toLowerCase startsWith  term.toLowerCase) || (row.title.toLowerCase startsWith term.toLowerCase)
+    }
   }
 }

@@ -25,6 +25,7 @@ trait WithDBSession {
          try {
            action(dbSession)
          } finally {
+           existingSession.map(_.close())
            existingSession = None
          }
        }

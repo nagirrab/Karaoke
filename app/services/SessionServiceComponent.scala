@@ -10,7 +10,9 @@ import scala.slick.lifted.TableQuery
 trait SessionServiceComponent {
   this: SessionRepositoryComponent with SessionSongRepositoryComponent =>
 
-  trait SessionService {
+  val sessionService = new SessionService
+
+  class SessionService {
     val orderingQuery = TableQuery[SessionSongOrders]
 
     def reorderSession(sessionId: SessionId)(implicit dbSession: DBSession): Seq[SessionSong] = {

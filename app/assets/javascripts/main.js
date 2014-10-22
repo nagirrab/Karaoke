@@ -21,7 +21,9 @@
       'angular-cookies': ['angular'],
       'angular-resource': ['angular'],
       'bootstrap': ['jquery'],
-      'angular-showErrors': ['angular']
+      'angular-showErrors': ['angular'],
+      'ui-bootstrap': ['angular', 'bootstrap'],
+      'ui-bootstrap-tpls': ['bootstrap']
     },
     paths: {
       'requirejs': ['../lib/requirejs/require'],
@@ -32,6 +34,8 @@
       'angular-resource': ['../lib/angularjs/angular-resource'],
       'angular-showErrors': ['/assets/js/vendor/showErrors'],
       'bootstrap': ['../lib/bootstrap/js/bootstrap'],
+      'ui-bootstrap': ['../lib/angular-ui-bootstrap/ui-bootstrap'],
+      'ui-bootstrap-tpls': ['../lib/angular-ui-bootstrap/ui-bootstrap-tpls'],
       'jsRoutes': ['/jsroutes'],
     }
   });
@@ -41,7 +45,7 @@
   };
 
   // Load the app. This is kept minimal so it doesn't need much updating.
-  require(['angular', 'angular-cookies', 'angular-route', 'angular-resource', 'angular-showErrors', 'jquery', 'bootstrap', './app'],
+  require(['angular', 'angular-cookies', 'angular-route', 'angular-resource', 'angular-showErrors', 'jquery', 'bootstrap', 'ui-bootstrap-tpls', 'ui-bootstrap', './app'],
     function (angular) {
       angular.bootstrap(document, ['app']);
     }
