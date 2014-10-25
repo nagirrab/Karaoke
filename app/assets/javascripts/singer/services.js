@@ -5,7 +5,7 @@ define(['angular', 'common'], function (angular) {
   'use strict';
 
   var mod = angular.module('singer.services', ['karaoke.common', 'ngCookies']);
-  mod.factory('singerService', ['$http', '$q', 'playRoutes', '$cookies', '$log', function ($http, $q, playRoutes, $cookies, $log) {
+  mod.factory('singerService', ['$http', '$q', 'playRoutes', '$cookies', '$log', 'flash', '$location', function ($http, $q, playRoutes, $cookies, $log, flash, $location) {
     var token = $cookies['SINGER_ID'];
     var singer;
     var singerPromise;
@@ -38,19 +38,32 @@ define(['angular', 'common'], function (angular) {
         });
       },
       join: function (joinAttempt) {
-        return playRoutes.controllers.api.singer.SessionSingerController.join().post(joinAttempt).then(function (response) {
-          $cookies['SINGER_ID'] = response.data.id;
-          token = response.data.id;
-          singer = response.data;
+        return playRoutes.controllers.api.singer.SessionSingerController.join().post(joinAttempt).success(function (response) {
+          $cookies['SINGER_ID'] = response.id;
+          token = response.id;
+          singer = response;
           $log.info("Created " + singer.name);
+          $location.path('/singer/' + response.sessionId);
+
+        }).error(function (response) {
+          flash.danger({
+             text: response,
+             seconds: 10
+           });
         });
       },
       rejoin: function (rejoinAttempt) {
-        return playRoutes.controllers.api.singer.SessionSingerController.rejoin().post(rejoinAttempt).then(function (response) {
-          $cookies['SINGER_ID'] = response.data.id;
-          token = response.data.id;
-          singer = response.data;
+        return playRoutes.controllers.api.singer.SessionSingerController.rejoin().post(rejoinAttempt).success(function (response) {
+          $cookies['SINGER_ID'] = response.id;
+          token = response.id;
+          singer = response;
           $log.info("Created " + singer.name);
+          $location.path('/singer/' + response.sessionId);
+        }).error(function (response) {
+        flash.danger({
+          text: response,
+          seconds: 10
+         })
         });
       },
       getSinger: function () {
