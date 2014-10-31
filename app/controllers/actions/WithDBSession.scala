@@ -17,7 +17,7 @@ trait WithDBSession {
 
   private var existingSession: Option[DBSession] = None
 
-   def WithDBSession[A](action: DBSession => Action[A]): Action[A] = {
+   def WithDBSession[A](action: DBSession => A): A = {
      existingSession match {
        case Some(dbSession) => action(dbSession)
        case None => DB.withSession { dbSession =>

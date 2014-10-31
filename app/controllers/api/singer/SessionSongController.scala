@@ -16,10 +16,10 @@ trait SessionSongController extends Controller with WithDBSession with WithSinge
   import SessionSongComponentFormatter._
   import SessionSongFormatter._
 
-  def requestSong() = WithSinger { (singer, dbSession) =>
-    implicit val db = dbSession
+  def requestSong() = Action(parse.tolerantJson) { req =>
+    WithSinger(req) { (singer, dbSession) =>
+      implicit val db = dbSession
 
-    Action(parse.tolerantJson) { req =>
       val songRequest = Json.fromJson[RequestSongRequest](req.body)
 
       songRequest match {
@@ -31,14 +31,12 @@ trait SessionSongController extends Controller with WithDBSession with WithSinge
         case JsError(e) => BadRequest(e.toString())
         case _ => BadRequest("wtf")
       }
-
     }
   }
 
-  def activeSongs() = WithSinger { (singer, dbSession) =>
-    implicit val db = dbSession
-
-    Action { req =>
+  def activeSongs() = Action { req =>
+    WithSinger(req) { (singer, dbSession) =>
+      implicit val db = dbSession
       Ok(Json.toJson(sessionSongRepository.activeSongsBySinger(singer.id.get)))
     }
   }

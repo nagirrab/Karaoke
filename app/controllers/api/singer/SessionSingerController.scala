@@ -40,13 +40,11 @@ trait SessionSingerController extends Controller with WithDBSession with WithSin
     }
   }
 
-  def currentSinger() = WithSinger { (singer, session) =>
-    implicit val dbSession = session
-    Action {
+  def currentSinger = Action { implicit req =>
+    WithSinger(req) { (singer, session) =>
       Ok(Json.toJson(singer))
     }
   }
-
 }
 
 object SessionSingerController
