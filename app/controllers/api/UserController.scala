@@ -1,6 +1,7 @@
 package controllers.api
 
 import controllers.actions.{WithUser, WithDBSession, Security}
+import play.api.db.slick.DBAction
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
 import repositories.UserRepositoryComponent
@@ -12,15 +13,15 @@ import scala.concurrent.Future
 trait UserController extends Controller with Security with WithDBSession with WithUser {
   self: UserRepositoryComponent =>
 
-  def login = WithDBSession { implicit dbSession =>
-    Action(parse.tolerantJson) { req =>
-      val loginAttempt = Json.fromJson[UserLoginAttempt](req.body)
+  def login = DBAction(parse.tolerantJson) { req =>
+    implicit val dbSession = req.dbSession
+    val loginAttempt = Json.fromJson[UserLoginAttempt](req.body)
 
-      loginAttempt.map(userRepository.login) match {
-        case JsSuccess(Some(u), _) if u.id.nonEmpty => Ok(Json.toJson(u)).withSession(req.session + ("userId" -> u.id.get.id.toString))
-        case JsSuccess(_, _) => BadRequest("no such user").withSession(req.session - "userId")
-        case JsError(e) => BadRequest(e.toString)
-      }
+    loginAttempt.map(userRepository.login) match {
+      case JsSuccess(Some(u), _) if u.id.nonEmpty => Ok(Json.toJson(u)).withSession(req.session + ("userId" -> u.id.get.id.toString))
+      case JsSuccess(_, _) => BadRequest("no such user").withSession(req.session - "userId")
+      case JsError(e) => BadRequest(e.toString)
+
     }
   }
 
@@ -28,8 +29,8 @@ trait UserController extends Controller with Security with WithDBSession with Wi
     Ok("logged out").withSession(req.session - "userId")
   }
 
-  def currentUser = WithUser { (user, dbSession) =>
-    Action {
+  def currentUser = Action { req =>
+    WithUser(req) { (user, dbSession) =>
       Ok(Json.toJson(user))
     }
   }

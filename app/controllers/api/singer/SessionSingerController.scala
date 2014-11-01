@@ -16,27 +16,25 @@ trait SessionSingerController extends Controller with WithDBSession with WithSin
   import SingerRepositoryMessageFormatter._
   import SingerFormatter._
 
-  def join() = WithDBSession { implicit dbSession =>
-    Action(parse.tolerantJson) { req =>
-      val joinAttempt = Json.fromJson[JoinSessionRequest](req.body)
+  def join() = DBAction(parse.tolerantJson) { req =>
+    implicit val dbSession = req.dbSession
+    val joinAttempt = Json.fromJson[JoinSessionRequest](req.request.body)
 
-      joinAttempt.map(a => singerRepository.joinSession(a, None)) match {
-        case JsSuccess(Success(s), _) => Ok(Json.toJson(s)).withSession(req.session + ("singerId" -> s.id.get.id.toString()))
-        case JsSuccess(Failure(e), _) => BadRequest(e.toString).withSession(req.session - "singerId")
-        case JsError(e) => BadRequest(e.toString)
-      }
+    joinAttempt.map(a => singerRepository.joinSession(a, None)) match {
+      case JsSuccess(Success(s), _) => Ok(Json.toJson(s)).withSession(req.session + ("singerId" -> s.id.get.id.toString()))
+      case JsSuccess(Failure(e), _) => BadRequest(e.toString).withSession(req.session - "singerId")
+      case JsError(e) => BadRequest(e.toString)
     }
   }
 
-  def rejoin = WithDBSession { implicit dbSession =>
-    Action(parse.tolerantJson) { req =>
-      val rejoinAttempt = Json.fromJson[RejoinSessionRequest](req.body)
+  def rejoin = DBAction(parse.tolerantJson) { req =>
+    implicit val dbSession = req.dbSession
+    val rejoinAttempt = Json.fromJson[RejoinSessionRequest](req.request.body)
 
-      rejoinAttempt.map(singerRepository.rejoinSession) match {
-        case JsSuccess(Success(s), _) => Ok(Json.toJson(s)).withSession(req.session + ("singerId" -> s.id.get.id.toString()))
-        case JsSuccess(Failure(e), _) => BadRequest(e.toString).withSession(req.session - "singerId")
-        case JsError(e) => BadRequest(e.toString)
-      }
+    rejoinAttempt.map(singerRepository.rejoinSession) match {
+      case JsSuccess(Success(s), _) => Ok(Json.toJson(s)).withSession(req.session + ("singerId" -> s.id.get.id.toString()))
+      case JsSuccess(Failure(e), _) => BadRequest(e.toString).withSession(req.session - "singerId")
+      case JsError(e) => BadRequest(e.toString)
     }
   }
 

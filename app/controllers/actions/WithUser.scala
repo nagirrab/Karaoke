@@ -17,17 +17,9 @@ trait WithUser extends WithDBSession {
         u <- userRepository.findById(UserId(uId))) yield u
 
 
-  def WithUser[A](action: (User, DBSession) => Action[A]): Action[A] = {
+  def WithUser[A](request: Request[A])(block: (User, DBSession) => Result): Result = {
     WithDBSession { implicit dbSession =>
-      val userBodyParser = parse.using { request =>
-        getUserFromRequest(request).map(u => action(u, dbSession).parser).getOrElse {
-          parse.error(Future.successful(Unauthorized("not logged in")))
-        }
-      }
-
-      Action.async(userBodyParser) { request =>
-        getUserFromRequest(request).map(u => action(u, dbSession)(request)).getOrElse(Future.successful(Unauthorized))
-      }
+      getUserFromRequest(request).map(u => block(u, dbSession)).getOrElse(Unauthorized)
     }
   }
 
