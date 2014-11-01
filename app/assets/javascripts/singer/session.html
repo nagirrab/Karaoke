@@ -2,6 +2,10 @@
   <button ng-click="addRequest()" class="btn btn-primary">Request a song</button>
 </div>
 
+<div ng-show="onDeck">
+  <h3>You are supposed to be singing {{onDeck.title}} by {{onDeck.artist}} right now!</h3>
+</div>
+
 <div>
   <h2>Upcoming songs</h2>
   <div ng-show="!activeSongs.length">You have no active songs</div>
@@ -11,9 +15,7 @@
       <br/>
       <small>{{song.status}}  <a data-ng-click="cancelSong(song.id)">Cancel</a></small>
     </div>
-
   </div>
-
 </div>
 
 <div>

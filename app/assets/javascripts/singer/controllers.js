@@ -12,7 +12,7 @@ define([], function() {
   };
   SingerCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes'];
 
-  var SessionCtrl = function($scope, $rootScope, $location, helper, playRoutes, flash) {
+  var SessionCtrl = function($scope, $rootScope, $location, helper, playRoutes, flash, $interval) {
       console.log(helper.sayHi());
       $rootScope.pageTitle = 'Session Details';
 
@@ -45,15 +45,27 @@ define([], function() {
 
       }
 
-      playRoutes.controllers.api.singer.SessionSongController.activeSongs().get().then(function(data) {
-        $scope.activeSongs = data.data;
-      })
+      $scope.refreshSession = function() {
+        playRoutes.controllers.api.singer.SessionSongController.activeSongs().get().then(function(data) {
+          $scope.activeSongs = data.data;
+          $scope.onDeck = $scope.activeSongs
+        });
+
+        playRoutes.controllers.api.singer.SessionSongController.activeSongs().get().then(function(data) {
+          $scope.activeSongs = data.data;
+          $scope.onDeck = _.findWhere($scope.activeSongs, { status: "ON_DECK" });
+        });
+      }
+
+      $scope.refreshSession();
+
+      $interval($scope.refreshSession, 20000)
 
       playRoutes.controllers.api.singer.SessionSongController.completedSongs().get().then(function(data) {
         $scope.completedSongs = data.data;
       })
     };
-    SessionCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes', 'flash'];
+    SessionCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes', 'flash', '$interval'];
 
   var RequestCtrl = function($scope, $rootScope, $location, helper, playRoutes, flash) {
     console.log(helper.sayHi());
