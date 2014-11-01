@@ -16,6 +16,8 @@ import scalaz.{Failure, Success, Validation}
 
 object SessionSongRepositoryMessages {
 
+  case class GuestRequestSongRequest(name: String, sessionId: SessionId, request: RequestSongRequest)
+
   case class RequestSongRequest(title: String,
                                 artist: String,
                                 songId: Option[SongId] = None,
@@ -25,6 +27,7 @@ object SessionSongRepositoryMessages {
   sealed trait RequestSongErrors
   case class InvalidSession(sessionId: SessionId) extends RequestSongErrors
   case class SessionNotAcceptingSongs(sessionId: SessionId) extends RequestSongErrors
+  case object UnknownRequestError extends RequestSongErrors
 
   sealed trait CancelSongErrors
   case object UnauthorizedCancel extends CancelSongErrors
@@ -35,17 +38,26 @@ object SessionSongRepositoryMessages {
   object SessionSongComponentFormatter {
     import SessionFormatter._
     implicit val requestSongRequestFormat = Json.format[RequestSongRequest]
+    implicit val guestRequestFormat = Json.format[GuestRequestSongRequest]
   }
 }
 
 trait SessionSongRepositoryComponent {
-  this: SessionRepositoryComponent =>
+  this: SessionRepositoryComponent with SingerRepositoryComponent =>
   val sessionSongRepository = new SessionSongRepository
 
   class SessionSongRepository extends BaseIdRepository[SessionSongId, models.SessionSong, SessionSongs](TableQuery[SessionSongs]) {
-    private val activeStates: Set[SongStatus] = Set(AwaitingApproval, Queued, OnDeck)
+    private val activeStates: Set[SongStatus] = Set(AwaitingApproval, Queued, OnDeck, OnHold)
+    private val completedStates: Set[SongStatus] = Set(Complete, Cancelled, Duplicate)
 
     def bySessionQuery(sessionId: SessionId) = query.filter(_.sessionId === sessionId)
+
+    def guestRequestSong(req: GuestRequestSongRequest)(implicit dbSession: DBSession): Validation[RequestSongErrors, SessionSong] = {
+      singerRepository.findOrCreateByName(req.sessionId, req.name) match {
+        case Some(singer) => sessionSongRepository.requestSong(req.request, singer)
+        case _ => Failure(UnknownRequestError)
+      }
+    }
 
     def requestSong(req: RequestSongRequest, singer: Singer)(implicit dbSession: DBSession): Validation[RequestSongErrors, SessionSong] = {
       val sessionSuccess = sessionRepository.findById(singer.sessionId) match {
@@ -81,6 +93,10 @@ trait SessionSongRepositoryComponent {
 
     def activeSongsBySinger(singerId: SingerId)(implicit dbSession: DBSession) = {
       query.filter(_.singerId === singerId).filter(_.status inSet activeStates).list
+    }
+
+    def completedSongsBySinger(singerId: SingerId)(implicit dbSession: DBSession) = {
+      query.filter(_.singerId === singerId).filter(_.status inSet completedStates).list
     }
   }
 }

@@ -25,10 +25,14 @@ define([], function() {
     };
   HostCreateSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location'];
 
-  var HostEditSessionCtrl = function(Session, $scope, $rootScope, $location, $routeParams, flash) {
+  var HostEditSessionCtrl = function(Session, $scope, $rootScope, $location, $routeParams, flash, $window) {
         $rootScope.pageTitle = 'Edit Session Details';
         $scope.sessionId = $routeParams.sessionId;
         $scope.session = Session.get({sessionId: $scope.sessionId});
+
+        $scope.cancel = function() {
+          $window.history.back();
+        }
 
         $scope.submit = function() {
          $scope.$broadcast('show-errors-check-validity');
@@ -40,9 +44,13 @@ define([], function() {
                    text: "Updated Successfully",
                    seconds: 10
                  });
+              $location.path("host/session/" + $scope.sessionId);
             },
             function(failureResult) {
-              alert("error")
+              flash.danger({
+                text: failureResult,
+                seconds: 10
+              });
             }
             )
           } else {
@@ -51,13 +59,24 @@ define([], function() {
 
         };
       };
-  HostEditSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'flash'];
+  HostEditSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'flash', '$window'];
 
   var HostSongSessionCtrl = function(Session, $scope, $rootScope, $location, $routeParams, playRoutes, flash) {
       $rootScope.pageTitle = 'Session Details';
       $scope.sessionId = parseInt($routeParams.sessionId);
       $scope.session = Session.get({sessionId: $scope.sessionId});
-      $scope.songs = Session.songs({sessionId: $scope.sessionId});
+
+      playRoutes.controllers.api.host.SessionController.details($scope.sessionId).get().success(function(data) {
+        $scope.songQueue = data.activeSongs;
+        $scope.songs = _.object(_.map(data.songs, function(s) { return [s.id, s];}));
+        $scope.singers = _.object(_.map(data.singers, function(s) { return [s.id, s];}));
+
+      }).error(function(error) {
+        flash.danger({
+          text: error,
+          seconds: 10
+        });
+      });
 
       $scope.statusOptions = ["AWAITING_OPEN", "ACCEPTING_REQUESTS", "OPEN", "NO_MORE_REQUESTS", "CLOSED"]
 

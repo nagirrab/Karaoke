@@ -9,6 +9,7 @@ define(['angular', './controllers', 'common'], function(angular, controllers) {
     $routeProvider
       .when('/singer',  {templateUrl: '/assets/javascripts/singer/singer.html', controller:controllers.SingerCtrl })
       .when('/singer/:sessionId',  {templateUrl: '/assets/javascripts/singer/session.html', controller:controllers.SessionCtrl, resolve: singerResolve})
+      .when('/singer/:sessionId/guest',  {templateUrl: '/assets/javascripts/singer/guest.html', controller:controllers.GuestCtrl})
       .when('/singer/:sessionId/request',  {templateUrl: '/assets/javascripts/singer/request.html', controller:controllers.RequestCtrl, resolve: singerResolve})
       .when('/singer/:sessionId/join',  {templateUrl: '/assets/javascripts/singer/join.html', controller:controllers.JoinSessionCtrl})
       .when('/singer/:sessionId/rejoin',  {templateUrl: '/assets/javascripts/singer/rejoin.html', controller:controllers.RejoinSessionCtrl})

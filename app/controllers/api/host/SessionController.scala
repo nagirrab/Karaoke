@@ -7,15 +7,16 @@ import play.api.Play.current
 import play.api.db.slick.{DB, DBAction}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
-import repositories.{SessionSongRepositoryComponent, SessionRepositoryComponent}
+import repositories.{SingerRepositoryComponent, SessionSongRepositoryComponent, SessionRepositoryComponent}
+import services.SessionServiceComponent
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object SessionController extends SessionController with SessionRepositoryComponent with SessionSongRepositoryComponent
+object SessionController extends SessionController with SessionRepositoryComponent with SessionSongRepositoryComponent with SingerRepositoryComponent with SessionServiceComponent
 
 trait SessionController extends Controller with Security {
-  self: SessionRepositoryComponent =>
+  self: SessionRepositoryComponent with SessionServiceComponent =>
   def create() = DBAction(parse.json) { rs =>
     implicit val session = rs.dbSession
 
@@ -54,12 +55,12 @@ trait SessionController extends Controller with Security {
     }
   }
 
-  def songs(id: SessionId) = Action.async { req =>
-    import models.SessionSongFormatter._
+  def details(id: SessionId) = Action.async { req =>
+    import services.SessionServiceFormatters._
     Future {
       DB.withSession { implicit s =>
-        sessionRepository.withSongs(id) match {
-          case Some((session, songs)) => Ok(Json.toJson(songs))
+        sessionService.details(id) match {
+          case Some(details) => Ok(Json.toJson(details))
           case _ => NotFound(Json.toJson(Map("error" -> "Not Found")))
         }
       }

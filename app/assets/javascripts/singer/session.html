@@ -18,6 +18,16 @@
 
 <div>
   <h2>Finished songs</h2>
-  <div ng-show="!finishedSongs.length">You have no finished songs</div>
+  <div ng-show="!completedSongs.length">You have no finished songs</div>
+
+  <div ng-repeat="song in completedSongs">
+    <div>
+      <b>{{song.title}}</b> by {{song.artist}}
+      <br/>
+      <small>{{song.status}}</small>
+    </div>
+
+  </div>
+
 
 </div>

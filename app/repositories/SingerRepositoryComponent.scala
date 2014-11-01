@@ -63,5 +63,14 @@ trait SingerRepositoryComponent {
         case _ => Failure(SingerNotFound(req.sessionId))
       }
     }
+
+    def findOrCreateByName(sessionId: SessionId, name: String)(implicit dbSession: DBSession): Option[Singer] = {
+      rejoinSession(RejoinSessionRequest(sessionId, name)) match {
+        case Success(s) => Some(s)
+        case _ => joinSession(JoinSessionRequest(sessionId, name, None)).toOption
+      }
+    }
+
+    def findBySession(sessionId: SessionId)(implicit dbSession: DBSession): Seq[Singer] = query.filter(_.sessionId === sessionId).list
   }
 }

@@ -31,6 +31,11 @@ define([], function() {
            playRoutes.controllers.api.singer.SessionSongController.activeSongs().get().then(function(data) {
              $scope.activeSongs = data.data;
            })
+
+           playRoutes.controllers.api.singer.SessionSongController.completedSongs().get().then(function(data) {
+              $scope.completedSongs = data.data;
+            })
+
         }).error(function(data) {
           flash.danger({
              text: data,
@@ -42,6 +47,10 @@ define([], function() {
 
       playRoutes.controllers.api.singer.SessionSongController.activeSongs().get().then(function(data) {
         $scope.activeSongs = data.data;
+      })
+
+      playRoutes.controllers.api.singer.SessionSongController.completedSongs().get().then(function(data) {
+        $scope.completedSongs = data.data;
       })
     };
     SessionCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes', 'flash'];
@@ -68,10 +77,6 @@ define([], function() {
           return $scope.searchResults[i].summary;
         }
       }
-    }
-
-    $scope.doDebug = function() {
-     debugger;
     }
 
 //    $scope.testSongs = $scope.doSearch('want');
@@ -101,6 +106,67 @@ define([], function() {
     }
   };
   RequestCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes', 'flash'];
+
+  var GuestCtrl = function($scope, $rootScope, $location, helper, playRoutes, flash, $routeParams) {
+      console.log(helper.sayHi());
+      $rootScope.pageTitle = 'Request A Song';
+
+      $scope.sessionId = parseInt($routeParams.sessionId);
+
+
+
+      $scope.reset = function() {
+        $scope.request = {
+          sessionId: $scope.sessionId
+        };
+      }
+
+      $scope.reset();
+
+      $scope.manualMode = false;
+
+      $scope.doSearch = function(text) {
+        return playRoutes.controllers.api.common.SongController.search(text).get().then(function(response) {
+          return response.data.map(function(s) { s.summary = s.title + " - " + s.artist; return s });
+        });
+      }
+
+      // See https://github.com/angular-ui/bootstrap/issues/981 for a discussion of this
+      $scope.formatLabel = function(model) {
+        for (var i=0; i< $scope.searchResults.length; i++) {
+          if (model === $scope.searchResults[i].id) {
+            return $scope.searchResults[i].summary;
+          }
+        }
+      }
+
+  //    $scope.testSongs = $scope.doSearch('want');
+      $scope.testSongs = [];
+      $scope.searchResults = [];
+      playRoutes.controllers.api.common.SongController.search("Want").get().then(function(response) {
+           $scope.testSongs =  response.data.map(function(s) { s.summary = s.title + " - " + s.artist; return s });
+           $scope.searchResults = $scope.testSongs;
+         })
+
+
+      $scope.submitRequest = function() {
+        var result = playRoutes.controllers.api.singer.SessionSongController.guestRequestSong().post($scope.request);
+
+        result.success(function(data) {
+          flash.success({
+             text: "Song Request Received",
+             seconds: 10
+           });
+          $scope.reset();
+        }).error(function(data) {
+          flash.danger({
+             text: data,
+             seconds: 10
+           });
+        });
+      }
+    };
+    GuestCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes', 'flash', '$routeParams'];
 
   var JoinSessionCtrl = function($scope, $rootScope, $location, helper, $routeParams, Session, singerService) {
     $rootScope.pageTitle = 'Join Session';
@@ -162,7 +228,8 @@ define([], function() {
     SessionCtrl: SessionCtrl,
     JoinSessionCtrl: JoinSessionCtrl,
     RejoinSessionCtrl: RejoinSessionCtrl,
-    RequestCtrl: RequestCtrl
+    RequestCtrl: RequestCtrl,
+    GuestCtrl: GuestCtrl
   };
 
 });

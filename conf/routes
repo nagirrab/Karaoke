@@ -13,15 +13,17 @@ POST    /api/user/create            controllers.api.UserController.create
 
 POST    /api/host/sessions               controllers.api.host.SessionController.create()
 GET     /api/host/sessions/:id           controllers.api.host.SessionController.show(id: models.SessionId)
-GET     /api/host/sessions/:id/songs     controllers.api.host.SessionController.songs(id: models.SessionId)
+GET     /api/host/sessions/:id/details   controllers.api.host.SessionController.details(id: models.SessionId)
 GET     /api/host/sessions               controllers.api.host.SessionController.list()
 PUT     /api/host/sessions/:id           controllers.api.host.SessionController.update(id: models.SessionId)
 POST    /api/host/sessions/:id           controllers.api.host.SessionController.update(id: models.SessionId)
 
 POST    /api/singer/sessions/join        controllers.api.singer.SessionSingerController.join
 POST    /api/singer/sessions/rejoin      controllers.api.singer.SessionSingerController.rejoin
+POST    /api/singer/sessions/guestRequest controllers.api.singer.SessionSongController.guestRequestSong
 POST    /api/singer/sessions/request     controllers.api.singer.SessionSongController.requestSong
 GET     /api/singer/sessions/activeSongs controllers.api.singer.SessionSongController.activeSongs
+GET     /api/singer/sessions/completedSongs controllers.api.singer.SessionSongController.completedSongs
 POST    /api/singer/songs/:songId/cancel controllers.api.singer.SessionSongController.cancel(songId: models.SessionSongId)
 GET     /api/singer/current              controllers.api.singer.SessionSingerController.currentSinger
 GET     /api/singer/sessions/active      controllers.api.host.SessionController.active

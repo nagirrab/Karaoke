@@ -1,4 +1,4 @@
-<h1>{{session.name}}</h1>
+<h1>{{session.name}} <a data-ng-href="#/host/session/{{sessionId}}/settings"><span class="glyphicon glyphicon-cog"></span></a></h1>
 <div>
   <select ng-model="session.status" ng-options="status for status in statusOptions" ng-change="updateStatus()"></select>
 </div>
@@ -18,10 +18,51 @@
 </div>
 
 <div>
-  Songs:
+  Active Songs:
 
-  <ul data-ng-repeat="song in songs">
-    <li>{{song.title}}</li>
-  </ul>
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+    <tr data-ng-repeat="songOrder in songQueue">
+      <td><b>{{songs[songOrder.songId].title}} - {{songs[songOrder.songId].artist}}</b> by {{singers[songs[songOrder.songId].singerId].name}}</td>
+      <td><a data-ng-href="#/singer/{{session.id}}/join" class="btn btn-primary">Join</a></td>
+    </tr>
+
+    </tbody>
+
+  </table>
+
+
+</div>
+
+<div>
+  Completed Songs:
+
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+    <tr data-ng-repeat="song in completedSongs">
+      <td><b>{{song.title}} - {{song.artist}}</b> by {{song.singerId}}</td>
+      <td></td>
+    </tr>
+
+    </tbody>
+
+  </table>
+
 
 </div>
