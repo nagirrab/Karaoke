@@ -2,13 +2,17 @@ define([], function() {
   'use strict';
 
   /** Controls the index page */
-  var SingerCtrl = function($scope, $rootScope, $location, helper) {
+  var SingerCtrl = function($scope, $rootScope, $location, helper, playRoutes) {
     console.log(helper.sayHi());
     $rootScope.pageTitle = 'Welcome';
-  };
-  SingerCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper'];
 
-  var SessionCtrl = function($scope, $rootScope, $location, helper, playRoutes) {
+    playRoutes.controllers.api.host.SessionController.active().get().success(function (data) {
+      $scope.sessions = data;
+    })
+  };
+  SingerCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes'];
+
+  var SessionCtrl = function($scope, $rootScope, $location, helper, playRoutes, flash) {
       console.log(helper.sayHi());
       $rootScope.pageTitle = 'Session Details';
 
@@ -16,13 +20,33 @@ define([], function() {
         $location.path($location.path() + "/request");
       }
 
+      $scope.cancelSong = function(songId) {
+        var result = playRoutes.controllers.api.singer.SessionSongController.cancel(songId).post();
+
+        result.success(function(data) {
+          flash.success({
+             text: "Song Cancelled",
+             seconds: 10
+           });
+           playRoutes.controllers.api.singer.SessionSongController.activeSongs().get().then(function(data) {
+             $scope.activeSongs = data.data;
+           })
+        }).error(function(data) {
+          flash.danger({
+             text: data,
+             seconds: 10
+           });
+        });
+
+      }
+
       playRoutes.controllers.api.singer.SessionSongController.activeSongs().get().then(function(data) {
         $scope.activeSongs = data.data;
       })
     };
-    SessionCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes'];
+    SessionCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes', 'flash'];
 
-  var RequestCtrl = function($scope, $rootScope, $location, helper, playRoutes) {
+  var RequestCtrl = function($scope, $rootScope, $location, helper, playRoutes, flash) {
     console.log(helper.sayHi());
     $rootScope.pageTitle = 'Request A Song';
     $scope.request = {
@@ -39,9 +63,9 @@ define([], function() {
 
     // See https://github.com/angular-ui/bootstrap/issues/981 for a discussion of this
     $scope.formatLabel = function(model) {
-      for (var i=0; i< $scope.states.length; i++) {
-        if (model === $scope.states[i].abbreviation) {
-          return $scope.states[i].name;
+      for (var i=0; i< $scope.searchResults.length; i++) {
+        if (model === $scope.searchResults[i].id) {
+          return $scope.searchResults[i].summary;
         }
       }
     }
@@ -52,8 +76,10 @@ define([], function() {
 
 //    $scope.testSongs = $scope.doSearch('want');
     $scope.testSongs = [];
+    $scope.searchResults = [];
     playRoutes.controllers.api.common.SongController.search("Want").get().then(function(response) {
          $scope.testSongs =  response.data.map(function(s) { s.summary = s.title + " - " + s.artist; return s });
+         $scope.searchResults = $scope.testSongs;
        })
 
 
@@ -61,13 +87,20 @@ define([], function() {
       var result = playRoutes.controllers.api.singer.SessionSongController.requestSong().post($scope.request);
 
       result.success(function(data) {
-        alert("success");
+        flash.success({
+           text: "Song Request Received",
+           seconds: 10
+         });
+        $location.path('/singer/' + $scope.sessionId);
       }).error(function(data) {
-        alert("failure")
+        flash.danger({
+           text: data,
+           seconds: 10
+         });
       });
     }
   };
-  RequestCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes'];
+  RequestCtrl.$inject = ['$scope', '$rootScope', '$location', 'helper', 'playRoutes', 'flash'];
 
   var JoinSessionCtrl = function($scope, $rootScope, $location, helper, $routeParams, Session, singerService) {
     $rootScope.pageTitle = 'Join Session';

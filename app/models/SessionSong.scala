@@ -9,7 +9,7 @@ case class SessionSongId(id: Long) extends BaseId
 object SessionSongId extends IdCompanion[SessionSongId]
 
 case class SessionSong(id: Option[SessionSongId] = None, singerId: SingerId, sessionId: SessionId, songId: Option[SongId] = None,
-                       submitDate: DateTime = DateTime.now, title: String, artist: String, specialRequest: Option[String] = None, externalLink: Option[String] = None,
+                       submitDate: DateTime = DateTime.now, title: String, artist: String, externalLink: Option[String] = None, specialRequest: Option[String] = None,
                        status: SongStatus = AwaitingApproval, priority: Int = 0, notes: String = "") extends WithId[SessionSongId]
 
 sealed trait SongStatus

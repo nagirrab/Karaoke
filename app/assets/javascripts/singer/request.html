@@ -11,7 +11,7 @@
     <div class="form-group" show-errors>
       <label for="songId">Search</label>
       <!--<input id="songId" type="text" ng-model="request.songId" placeholder="Search" typeahead="song.id as song.summary for song in doSearch($viewValue)" typeahead-editable=false typeahead-min-length=3 typeahead-wait-ms=20 typeahead-loading="loadingSongs" class="form-control">-->
-      <input id="songId" type="text" ng-model="request.songId" placeholder="Search" typeahead="song.id as song.summary for song in testSongs" typeahead-editable=false typeahead-min-length=3 typeahead-wait-ms=100 typeahead-loading="loadingSongs" typeahead-input-formatter="$model" class="form-control">
+      <input id="songId" type="text" ng-model="request.songId" placeholder="Search" typeahead="song.id for song in testSongs" typeahead-editable=false typeahead-min-length=3 typeahead-wait-ms=100 typeahead-loading="loadingSongs" typeahead-input-formatter="formatLabel($model)" class="form-control">
       <i ng-show="loadingSongs" class="glyphicon glyphicon-refresh"></i>
 
       <select ng-model="request.songIdTest" ng-options="song.id as song.summary for song in testSongs" typeahead-editable=false typeahead-min-length=3 typeahead-wait-ms=20 typeahead-loading="loadingSongs" class="form-control"></select>
@@ -21,22 +21,22 @@
   <fieldset ng-show="manualMode">
     <div class="form-group" show-errors>
       <label for="title">Song Title</label>
-      <input id="title" class="form-control" data-ng-model="request.title" placeholder="Song Title" required />
+      <input id="title" name="request.title" class="form-control" data-ng-model="request.title" placeholder="Song Title" ng-required="manualMode" />
     </div>
     <div class="form-group">
       <label for="artist">Song Artist</label>
-      <input id="artist" class="form-control" data-ng-model="request.artist" placeholder="Song Artist" required />
+      <input id="artist" name="request.artist" class="form-control" data-ng-model="request.artist" placeholder="Song Artist" ng-required="manualMode" />
     </div>
     <div class="form-group">
       <label for="artist">External Url</label>
-      <input id="externalLink" class="form-control" data-ng-model="request.externalLink" placeholder="A youtube link if you have one..." required />
+      <input id="externalLink" name="request.externalLink" class="form-control" data-ng-model="request.externalLink" placeholder="A youtube link if you have one..." />
     </div>
   </fieldset>
 
   <fieldset>
     <div class="form-group">
       <label for="title">Special Requests</label>
-      <textarea data-ng-model="request.notes"  class="form-control" id="specialRequests"></textarea>
+      <textarea data-ng-model="request.specialRequest"  class="form-control" id="specialRequest"></textarea>
     </div>
   </fieldset>
 

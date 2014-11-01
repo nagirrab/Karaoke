@@ -1,1 +1,22 @@
-this is the singer html
+
+<h1>Join a session:</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th></th>
+    </tr>
+
+  </thead>
+
+  <tbody>
+    <tr data-ng-repeat="session in sessions">
+      <td>{{session.name}}</td>
+      <td><a data-ng-href="#/singer/{{session.id}}/join" class="btn btn-primary">Join</a></td>
+    </tr>
+
+  </tbody>
+
+</table>
+

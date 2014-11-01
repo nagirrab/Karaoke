@@ -22,7 +22,10 @@ trait SessionRepositoryComponent {
       findById(id).map(s => (s, sessionSongRepository.bySessionQuery(id).list))
     }
 
+    def active(implicit dbSession: DBSession): Seq[models.Session] = query.filter(_.status inSet openStates).list
+
     private val acceptingSongsStates: Set[SessionStatus] = Set(AcceptingRequests, Open)
+    private val openStates: Set[SessionStatus] = Set(AwaitingOpen, AcceptingRequests, Open, NoMoreRequests)
 
     def isAcceptingRequests(session: models.Session): Boolean = acceptingSongsStates.contains(session.status)
   }

@@ -35,6 +35,14 @@ trait SessionController extends Controller with Security {
     }
   }
 
+  def active() = Action.async { req =>
+    Future {
+      DB.withSession { implicit s =>
+        Ok(Json.toJson(sessionRepository.active))
+      }
+    }
+  }
+
   def show(id: SessionId) = Action.async { req =>
     Future {
       DB.withSession { implicit s =>

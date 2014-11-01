@@ -2,7 +2,7 @@ package controllers.api.singer
 
 
 import controllers.actions.{WithSinger, WithDBSession}
-import models.SessionSongFormatter
+import models.{SessionSongId, SongId, SessionSongFormatter}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.{Action, Controller}
 import repositories.{SessionRepositoryComponent, SingerRepositoryComponent, SessionSongRepositoryComponent}
@@ -39,6 +39,17 @@ trait SessionSongController extends Controller with WithDBSession with WithSinge
       implicit val db = dbSession
       Ok(Json.toJson(sessionSongRepository.activeSongsBySinger(singer.id.get)))
     }
+  }
+
+  def cancel(songId: SessionSongId) =  Action { req =>
+    WithSinger(req) { (singer, dbSession) =>
+      implicit val dbs = dbSession
+      sessionSongRepository.cancelSong(songId, singer.id.get) match {
+        case Success(song) => Ok(Json.toJson(song))
+        case Failure(error) => BadRequest(error.toString)
+      }
+    }
+
   }
 
 }
