@@ -3,18 +3,22 @@
   <select ng-model="session.status" ng-options="status for status in statusOptions" ng-change="updateStatus()"></select>
 </div>
 
-<div ng-show="!currentSong" class="well">
+<div ng-show="!onDeck" class="well">
   No current song
 </div>
 
-<div ng-show="currentSong" class="well">
-  <h3>{{currentSong.title}}</h3>
-  <h4>{{currentSong.artist}}</h4>
+<div ng-show="onDeck" class="well">
+  <h3>{{onDeck.title}}</h3>
+  <h4>by {{onDeck.artist}}</h4>
+  <p>Sung by {{singers[onDeck.singerId].name }} </p>
+  <p ng-show="onDeck.externalLink">External: <a ng-href="{{onDeck.externalLink}}" target="_blank">{{onDeck.externalLink}}</a></p>
+  <p ng-show="onDeck.specialRequest">Special Request: {{onDeck.specialRequest}}</p>
 </div>
 
 <div>
-  <button type="button" class="btn btn-primary">Finish Song</button>
-  <button type="button" class="btn btn-primary">Do Something else</button>
+  <button type="button" ng-click="advance()" class="btn btn-primary">Next Song</button>
+  <button type="button" ng-click="deferCurrentSong()" class="btn btn-primary">Defer This Song</button>
+  <a href ng-href="#/singer/{{sessionId}}/guest" class="btn btn-primary">Manually enter song</a>
 </div>
 
 <div>
@@ -32,7 +36,14 @@
     <tbody>
     <tr data-ng-repeat="songOrder in songQueue">
       <td><b>{{songs[songOrder.songId].title}} - {{songs[songOrder.songId].artist}}</b> by {{singers[songs[songOrder.songId].singerId].name}}</td>
-      <td><a data-ng-href="#/singer/{{session.id}}/join" class="btn btn-primary">Join</a></td>
+      <td>
+        <div class="btn-group">
+          <button ng-click="updateSongStatus(songOrder.songId, 'ON_HOLD')" ng-show="songs[songOrder.songId].status == 'QUEUED'" class="btn btn-primary">Put on hold</button>
+          <button ng-click="updateSongStatus(songOrder.songId, 'QUEUED')" ng-show="songs[songOrder.songId].status == 'ON_HOLD'" class="btn btn-primary">Take off hold</button>
+          <button ng-click="playNow(songOrder.songId)" class="btn btn-primary">Play Now</button>
+          <button ng-click="updateSongStatus(songOrder.songId, 'CANCELLED')" class="btn btn-primary">Cancel</button>
+        </div>
+      </td>
     </tr>
 
     </tbody>

@@ -61,30 +61,54 @@ define([], function() {
       };
   HostEditSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'flash', '$window'];
 
-  var HostSongSessionCtrl = function(Session, $scope, $rootScope, $location, $routeParams, playRoutes, flash) {
+  var HostSongSessionCtrl = function(Session, $scope, $rootScope, $location, $routeParams, playRoutes, flash, $interval) {
       $rootScope.pageTitle = 'Session Details';
       $scope.sessionId = parseInt($routeParams.sessionId);
       $scope.session = Session.get({sessionId: $scope.sessionId});
 
-      playRoutes.controllers.api.host.SessionController.details($scope.sessionId).get().success(function(data) {
-        $scope.songQueue = data.activeSongs;
-        $scope.songs = _.object(_.map(data.songs, function(s) { return [s.id, s];}));
-        $scope.singers = _.object(_.map(data.singers, function(s) { return [s.id, s];}));
+      $scope.refreshSession = function() {
+        playRoutes.controllers.api.host.SessionController.details($scope.sessionId).get().success(function(data) {
+          $scope.onDeck = data.onDeck;
+          $scope.songQueue = data.activeSongs;
+          $scope.songs = _.object(_.map(data.songs, function(s) { return [s.id, s];}));
+          $scope.singers = _.object(_.map(data.singers, function(s) { return [s.id, s];}));
 
-      }).error(function(error) {
-        flash.danger({
-          text: error,
-          seconds: 10
+        }).error(function(error) {
+          flash.danger({
+            text: error,
+            seconds: 10
+          });
         });
-      });
+      }
+
+      $scope.refreshSession()
+
+      $scope.advance = function() {
+        playRoutes.controllers.api.host.SessionController.advance($scope.sessionId).post().then($scope.refreshSession)
+      }
+
+      $scope.deferCurrentSong = function() {
+        playRoutes.controllers.api.host.SessionController.deferCurrentSong($scope.sessionId).post().then($scope.refreshSession)
+      }
+
+      $scope.updateSongStatus = function(songId, status) {
+        playRoutes.controllers.api.host.SessionController.updateSongStatus($scope.sessionId).post({ songId: songId, newStatus: status}).then($scope.refreshSession)
+      }
 
       $scope.statusOptions = ["AWAITING_OPEN", "ACCEPTING_REQUESTS", "OPEN", "NO_MORE_REQUESTS", "CLOSED"]
 
       $scope.updateStatus = function() {
         playRoutes.controllers.api.host.SessionController.update($scope.sessionId).put($scope.session);
       }
+
+      $scope.playNow = function(songId) {
+        playRoutes.controllers.api.host.SessionController.playNow($scope.sessionId, songId).post($scope.session).then($scope.refreshSession);
+      }
+
+      $interval($scope.refreshSession, 30000)
+
   };
-    HostSongSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'playRoutes', 'flash'];
+    HostSongSessionCtrl.$inject = ['Session', '$scope', '$rootScope', '$location', '$routeParams', 'playRoutes', 'flash', '$interval'];
 
 
   /** Controls the header */

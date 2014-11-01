@@ -2,13 +2,13 @@ package controllers.api.host
 
 import controllers.actions.Security
 import models.SessionFormatter._
-import models.SessionId
+import models.{SessionSongId, SessionSongFormatter, SessionId}
 import play.api.Play.current
 import play.api.db.slick.{DB, DBAction}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
 import repositories.{SingerRepositoryComponent, SessionSongRepositoryComponent, SessionRepositoryComponent}
-import services.SessionServiceComponent
+import services.{UpdateSongStatus, SessionServiceComponent}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -63,6 +63,52 @@ trait SessionController extends Controller with Security {
           case Some(details) => Ok(Json.toJson(details))
           case _ => NotFound(Json.toJson(Map("error" -> "Not Found")))
         }
+      }
+    }
+  }
+
+  def advance(id: SessionId) = Action.async { req =>
+    import SessionSongFormatter._
+    import services.SessionServiceFormatters._
+    Future {
+      DB.withSession { implicit s =>
+        sessionService.advanceQueue(id)
+        Ok
+      }
+    }
+  }
+
+  def deferCurrentSong(id: SessionId) = Action.async { req =>
+    import SessionSongFormatter._
+    import services.SessionServiceFormatters._
+    Future {
+      DB.withSession { implicit s =>
+        sessionService.deferCurrentSong(id)
+        Ok
+      }
+    }
+  }
+
+  def updateSongStatus(sessionId: SessionId) = Action.async(parse.tolerantJson) { req =>
+    import services.SessionServiceFormatters._
+    import SessionSongFormatter._
+    Future {
+      DB.withSession { implicit s =>
+        req.body.validate[UpdateSongStatus] match {
+          case JsSuccess(message, _) => Ok(Json.toJson(sessionService.updateSongStatus(message)))
+          case JsError(errors) => BadRequest(errors.toString)
+        }
+      }
+    }
+  }
+
+  def playNow(sessionId: SessionId, songId: SessionSongId) = Action.async { req =>
+    import services.SessionServiceFormatters._
+    import SessionSongFormatter._
+    Future {
+      DB.withSession { implicit s =>
+        sessionService.playNow(sessionId, songId)
+        Ok
       }
     }
   }

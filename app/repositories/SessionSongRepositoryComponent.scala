@@ -89,7 +89,9 @@ trait SessionSongRepositoryComponent {
     }
 
     // For some reason _.status === Queued does not lift properly, so leave as a set operation
-    def availableSongsByDateQuery(sessionId: SessionId) = query.filter(_.status inSet Set(Queued)).sortBy(_.submitDate)
+    def availableSongsByDateQuery(sessionId: SessionId) = query.filter(_.status inSet Set(Queued, OnHold)).sortBy(_.submitDate)
+
+    def onDeck(sessionId: SessionId)(implicit dbSession: DBSession) = query.filter(_.sessionId === sessionId).filter(_.status inSet Set(OnDeck)).firstOption
 
     def activeSongsBySinger(singerId: SingerId)(implicit dbSession: DBSession) = {
       query.filter(_.singerId === singerId).filter(_.status inSet activeStates).list

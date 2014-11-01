@@ -17,6 +17,10 @@ GET     /api/host/sessions/:id/details   controllers.api.host.SessionController.
 GET     /api/host/sessions               controllers.api.host.SessionController.list()
 PUT     /api/host/sessions/:id           controllers.api.host.SessionController.update(id: models.SessionId)
 POST    /api/host/sessions/:id           controllers.api.host.SessionController.update(id: models.SessionId)
+POST    /api/host/sessions/:id/advance   controllers.api.host.SessionController.advance(id: models.SessionId)
+POST    /api/host/sessions/:sessionId/playNow/:songId controllers.api.host.SessionController.playNow(sessionId: models.SessionId, songId: models.SessionSongId)
+POST    /api/host/sessions/:id/updateSongStatus controllers.api.host.SessionController.updateSongStatus(id: models.SessionId)
+POST    /api/host/sessions/:id/deferCurrentSong controllers.api.host.SessionController.deferCurrentSong(id: models.SessionId)
 
 POST    /api/singer/sessions/join        controllers.api.singer.SessionSingerController.join
 POST    /api/singer/sessions/rejoin      controllers.api.singer.SessionSingerController.rejoin
