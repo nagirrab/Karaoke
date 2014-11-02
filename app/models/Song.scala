@@ -1,7 +1,8 @@
 package models
 
 import org.virtuslab.unicorn.LongUnicornPlay._
-import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
+//import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
+import ExtendedPostgresDriver.simple._
 import play.api.libs.json.Json
 
 case class SongId(id: Long) extends BaseId

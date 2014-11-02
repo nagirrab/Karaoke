@@ -126,7 +126,8 @@ define([], function() {
 
       $scope.reset = function() {
         $scope.request = {
-          sessionId: $scope.sessionId
+          sessionId: $scope.sessionId,
+          request: {}
         };
       }
 
@@ -135,7 +136,7 @@ define([], function() {
       $scope.manualMode = false;
 
       $scope.doSearch = function(text) {
-          return playRoutes.controllers.api.common.SongController.search(text).get().then(function(response) {
+        return playRoutes.controllers.api.common.SongController.search(text).get().then(function(response) {
           $scope.fullSearchResults = response.data.map(function(s) { s.summary = s.title + " - " + s.artist; return s });
           return _.pluck($scope.fullSearchResults, "summary");
         });
@@ -146,14 +147,14 @@ define([], function() {
         $scope.request.songId = undefined;
       }
 
-      $scope.$watch('request.songSummary', function(newValue, oldValue) {
+      $scope.$watch('request.request.songSummary', function(newValue, oldValue) {
         var updatedSong = _.findWhere($scope.fullSearchResults, { summary: newValue })
         if (updatedSong === undefined) {
-          $scope.request.songId = undefined;
+          $scope.request.request.songId = undefined;
         } else {
-          $scope.request.songId = updatedSong.id;
-          $scope.request.artist = updatedSong.artist;
-          $scope.request.title = updatedSong.title;
+          $scope.request.request.songId = updatedSong.id;
+          $scope.request.request.artist = updatedSong.artist;
+          $scope.request.request.title = updatedSong.title;
         }
       })
 

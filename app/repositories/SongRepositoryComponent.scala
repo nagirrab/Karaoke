@@ -2,8 +2,10 @@ package repositories
 
 import models._
 import org.virtuslab.unicorn.LongUnicornPlay._
-import org.virtuslab.unicorn.LongUnicornPlay.driver.simple._
+import ExtendedPostgresDriver.simple._
 import play.api.db.slick.{Session => DBSession}
+
+import scala.slick.jdbc.StaticQuery
 
 
 /**
@@ -20,7 +22,7 @@ trait SongRepositoryComponent {
     def byArtistAndTitleQuery(artist: String, title: String) = query.filter(_.artist === artist).filter(_.title === title)
 
     def fuzzyQuery(term: String) = query.filter { row =>
-      (row.artist.toLowerCase startsWith  term.toLowerCase) || (row.title.toLowerCase startsWith term.toLowerCase)
+      toTsVector(row.artist) @+ toTsVector(row.title) @@ toTsQuery(term.replaceAll(" ", " & ").bind)
     }
   }
 }

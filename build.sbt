@@ -28,7 +28,9 @@ libraryDependencies ++= Seq(
   "org.webjars" % "bootstrap" % "3.1.1-2" exclude("org.webjars", "jquery"),
   "org.webjars" % "angularjs" % "1.2.18" exclude("org.webjars", "jquery"),
   "net.sf.supercsv" % "super-csv" % "2.2.0",
-  "org.webjars" % "angular-ui-bootstrap" % "0.11.2"
+  "org.webjars" % "angular-ui-bootstrap" % "0.11.2",
+  "com.github.tminglei" %% "slick-pg" % "0.6.5.3",
+  "com.github.tminglei" %% "slick-pg_joda-time" % "0.6.5.3"
 )
 
 libraryDependencies ++= Seq(

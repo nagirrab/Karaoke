@@ -16,7 +16,7 @@
   <fieldset ng-hide="manualMode">
     <div class="form-group" show-errors>
       <label for="songSummary">Search</label>
-      <input id="songSummary" type="text" ng-model="request.songSummary" placeholder="Search" typeahead="summary for summary in doSearch($viewValue)" typeahead-editable=false typeahead-min-length=3 typeahead-wait-ms=20 typeahead-loading="loadingSongs" class="form-control">
+      <input id="songSummary" type="text" ng-model="request.request.songSummary" placeholder="Search" typeahead="summary for summary in doSearch($viewValue)" typeahead-editable=false typeahead-min-length=3 typeahead-wait-ms=20 typeahead-loading="loadingSongs" class="form-control">
 
       <i ng-show="loadingSongs" class="glyphicon glyphicon-refresh"></i>
     </div>
@@ -25,22 +25,22 @@
   <fieldset ng-show="manualMode">
     <div class="form-group" show-errors>
       <label for="title">Song Title</label>
-      <input id="title" name="request.title" class="form-control" data-ng-model="request.title" placeholder="Song Title" ng-required="manualMode" ng-change="unsetSong()" />
+      <input id="title" name="request.request.title" class="form-control" data-ng-model="request.request.title" placeholder="Song Title" ng-required="manualMode" ng-change="unsetSong()" />
     </div>
     <div class="form-group">
       <label for="artist">Song Artist</label>
-      <input id="artist" name="request.artist" class="form-control" data-ng-model="request.artist" placeholder="Song Artist" ng-required="manualMode" ng-change="unsetSong()" />
+      <input id="artist" name="request.request.artist" class="form-control" data-ng-model="request.request.artist" placeholder="Song Artist" ng-required="manualMode" ng-change="unsetSong()" />
     </div>
     <div class="form-group">
       <label for="artist">External Url</label>
-      <input id="externalLink" name="request.externalLink" class="form-control" data-ng-model="request.externalLink" placeholder="A youtube link if you have one..." />
+      <input id="externalLink" name="request.request.externalLink" class="form-control" data-ng-model="request.request.externalLink" placeholder="A youtube link if you have one..." />
     </div>
   </fieldset>
 
   <fieldset>
     <div class="form-group">
       <label for="title">Special Requests</label>
-      <textarea data-ng-model="request.specialRequest"  class="form-control" id="specialRequest"></textarea>
+      <textarea data-ng-model="request.request.specialRequest"  class="form-control" id="specialRequest"></textarea>
     </div>
   </fieldset>
 
@@ -48,6 +48,5 @@
   <fieldset>
     <button class="btn btn-primary" data-ng-disabled="requestForm.$invalid" data-ng-click="submitRequest()">Request</button>
   </fieldset>
-
 
 </form>
